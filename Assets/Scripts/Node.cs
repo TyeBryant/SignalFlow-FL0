@@ -32,6 +32,9 @@ public class Node : MonoBehaviour {
         ESC_ALL
     }
 
+    [Tooltip("What color is each channel? Ordered from Channel One to Channel All (5) elements maximum")]
+    public Material[] channelColours;
+
     [Tooltip("Determines my node type")]
     public NodeType type;
 
@@ -44,6 +47,9 @@ public class Node : MonoBehaviour {
     [Tooltip("Determines what signals I can accept from")]
     public SignalChannel[] acceptedChannels;
 
+    [Tooltip("Determines the colour of the signal")]
+    public Color signalColour;
+
     [HideInInspector]
     public bool isPowered;
 
@@ -53,8 +59,15 @@ public class Node : MonoBehaviour {
     [HideInInspector]
     public ConnectionManager conMan;
 
-    private void Start()
+    [HideInInspector]
+    public LineRenderer lineRend;
+
+    public void Start()
     {
+        //Set up the LineRenderer
+        lineRend = this.gameObject.AddComponent<LineRenderer>();
+        LineRendererSetup(lineRend);
+
         //Safety falses
         isPowered = false;
 
@@ -112,9 +125,10 @@ public class Node : MonoBehaviour {
     }
 
     //If the node is connected then draw a line to the other node
-    private void Connected(GameObject poweredObject)
+    public void Connected(GameObject poweredObject)
     {
-        Debug.DrawLine(poweredObject.transform.position, this.transform.position, Color.yellow);      
+        lineRend.SetPosition(0, this.gameObject.transform.position);
+        lineRend.SetPosition(1, poweredObject.transform.position); 
     }    
 
     public void MassDisconnect()
@@ -126,6 +140,7 @@ public class Node : MonoBehaviour {
             powering.GetComponent<Node>().isPowered = false;
             powering.GetComponent<Node>().MassDisconnect();          
             powering = null;
+            lineRend.SetPosition(1, this.transform.position);
         }
     }
 
@@ -166,5 +181,46 @@ public class Node : MonoBehaviour {
 
         //Otherwise return false
         return false;
+    }
+
+    //Set up everything to do with Line Renderers
+    void LineRendererSetup(LineRenderer l)
+    {
+        l.startWidth = 0.5f;
+        l.endWidth = 0.01f;
+
+        //Choose Material Based on Channel
+        switch (channel)
+        {
+            case SignalChannel.ESC_ONE:
+                {
+                    l.material = channelColours[0];
+                }
+                break;
+
+            case SignalChannel.ESC_TWO:
+                {
+                    l.material = channelColours[1];
+                }
+                break;
+
+            case SignalChannel.ESC_THREE:
+                {
+                    l.material = channelColours[2];
+                }
+                break;
+
+            case SignalChannel.ESC_FOUR:
+                {
+                    l.material = channelColours[3];
+                }
+                break;
+
+            case SignalChannel.ESC_ALL:
+                {
+                    l.material = channelColours[4];
+                }
+                break;
+        }
     }
 }
