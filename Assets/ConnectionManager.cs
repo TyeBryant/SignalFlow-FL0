@@ -7,6 +7,7 @@ public class ConnectionManager : MonoBehaviour {
     [HideInInspector]
     public bool isCarryingSignal;
     public GameObject powerFrom;
+    public GameObject child;
 
     Camera cam;
     Vector3 mousePos = new Vector3(0,0,0); 
@@ -22,7 +23,8 @@ public class ConnectionManager : MonoBehaviour {
         if (isCarryingSignal)
         {
             mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-            Debug.DrawLine(powerFrom.transform.position, mousePos, Color.blue);
+            child.transform.position = new Vector3(mousePos.x, mousePos.y, 0);
+            powerFrom.GetComponent<Node>().Connected(child);
 
             //If the player right clicks, drop the current signal
             if (Input.GetMouseButtonDown(1))
@@ -34,6 +36,7 @@ public class ConnectionManager : MonoBehaviour {
     public void DisconnectSignal()
     {
         isCarryingSignal = false;
+        powerFrom.GetComponent<Node>().lineRend.SetPosition(1, powerFrom.transform.position);
         powerFrom = null;
     }
 

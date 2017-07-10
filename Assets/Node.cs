@@ -44,6 +44,9 @@ public class Node : MonoBehaviour {
     [Tooltip("Determines what signals I can accept from")]
     public SignalChannel[] acceptedChannels;
 
+    [Tooltip("Determines the colour of the signal")]
+    public Color signalColour;
+
     [HideInInspector]
     public bool isPowered;
 
@@ -53,8 +56,18 @@ public class Node : MonoBehaviour {
     [HideInInspector]
     public ConnectionManager conMan;
 
-    private void Start()
+    [HideInInspector]
+    public LineRenderer lineRend;
+
+    public void Start()
     {
+        //Set up the LineRenderer
+        lineRend = this.gameObject.AddComponent<LineRenderer>();
+        lineRend.startWidth = 0.5f;
+        lineRend.endWidth = 0.01f;
+        lineRend.startColor = signalColour;
+        lineRend.endColor = signalColour;
+
         //Safety falses
         isPowered = false;
 
@@ -112,9 +125,10 @@ public class Node : MonoBehaviour {
     }
 
     //If the node is connected then draw a line to the other node
-    private void Connected(GameObject poweredObject)
+    public void Connected(GameObject poweredObject)
     {
-        Debug.DrawLine(poweredObject.transform.position, this.transform.position, Color.yellow);      
+        lineRend.SetPosition(0, this.gameObject.transform.position);
+        lineRend.SetPosition(1, poweredObject.transform.position); 
     }    
 
     public void MassDisconnect()
@@ -126,6 +140,7 @@ public class Node : MonoBehaviour {
             powering.GetComponent<Node>().isPowered = false;
             powering.GetComponent<Node>().MassDisconnect();          
             powering = null;
+            lineRend.SetPosition(1, this.transform.position);
         }
     }
 
