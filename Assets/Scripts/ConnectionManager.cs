@@ -52,5 +52,7 @@ public class ConnectionManager : MonoBehaviour {
     {
         powerFrom.GetComponent<Node>().powering = connectingNode;
         connectingNode.GetComponent<Node>().receiving = powerFrom;
+        powerFrom.GetComponent<Node>().lPowering.Add(connectingNode);
+        connectingNode.GetComponent<Node>().lReceiving.Add(powerFrom);
     }
 }

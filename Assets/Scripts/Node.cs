@@ -50,11 +50,14 @@ public class Node : MonoBehaviour {
     [Tooltip("Determines the colour of the signal")]
     public Color signalColour;
 
-    [HideInInspector]
+    //[HideInInspector]
     public bool isPowered;
 
     [HideInInspector]
     public GameObject powering, receiving;
+    
+    public List<GameObject> lPowering = new List<GameObject>();
+    public List<GameObject> lReceiving = new List<GameObject>();
 
     [HideInInspector]
     public ConnectionManager conMan;
@@ -98,8 +101,9 @@ public class Node : MonoBehaviour {
         //Allow the player to pick up a signal
         if(isPowered && !conMan.isCarryingSignal)
         {
-            if (powering)
+            if (powering) {
                 MassDisconnect();
+            }
             else
                 conMan.ProvideSignal(this.gameObject);
         }
@@ -135,12 +139,34 @@ public class Node : MonoBehaviour {
     {
         //Check if this node is connected
         if (powering)
-    {
-            powering.GetComponent<Node>().receiving = null;
-            powering.GetComponent<Node>().isPowered = false;
-            powering.GetComponent<Node>().MassDisconnect();          
-            powering = null;
+        {
+            powering.GetComponent<Node>().lReceiving.Remove(this.gameObject);
+
+
+            if (powering.GetComponent<Node>().lReceiving.Count == 0) 
+            {
+                powering.GetComponent<Node>().receiving = null;
+                powering.GetComponent<Node>().isPowered = false;
+                powering.GetComponent<Node>().lPowering.Clear();
+
+                powering.GetComponent<Node>().MassDisconnect();
+
+                powering = null;
+            }
+
+            lPowering.Remove(powering);
             lineRend.SetPosition(1, this.transform.position);
+
+        }
+    }
+
+    public void DisconnectNode(GameObject poweredNode) 
+    {
+        if (lPowering.Contains(poweredNode)) 
+        {
+            if (poweredNode.GetComponent<Node>().lReceiving.Count <= 1)
+                poweredNode.GetComponent<Node>().MassDisconnect();
+            lPowering.Remove(poweredNode);
         }
     }
 
