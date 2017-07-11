@@ -50,13 +50,15 @@ public class Node : MonoBehaviour {
     [Tooltip("Determines the colour of the signal")]
     public Color signalColour;
 
-    //[HideInInspector]
+    [HideInInspector]
     public bool isPowered;
 
     [HideInInspector]
     public GameObject powering, receiving;
     
+    [HideInInspector]
     public List<GameObject> lPowering = new List<GameObject>();
+    [HideInInspector]
     public List<GameObject> lReceiving = new List<GameObject>();
 
     [HideInInspector]
@@ -154,9 +156,10 @@ public class Node : MonoBehaviour {
                 powering = null;
             }
 
-            lPowering.Remove(powering);
             lineRend.SetPosition(1, this.transform.position);
-
+            lPowering.Remove(powering); 
+            if (lPowering.Count == 0)
+                powering = null;
         }
     }
 
