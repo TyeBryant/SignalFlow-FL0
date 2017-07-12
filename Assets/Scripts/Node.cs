@@ -101,7 +101,7 @@ public class Node : MonoBehaviour {
     }
 
     //The Sprite has been clicked
-    private void OnMouseDown()
+    public void OnMouseDown()
     {   
         //Allow the player to pick up a signal
         if(isPowered && !conMan.isCarryingSignal)
@@ -156,7 +156,6 @@ public class Node : MonoBehaviour {
                 lPowering.Remove(powering);
 
                 powering.GetComponent<Node>().MassDisconnect();
-                Debug.Log(powering.name);
                 powering = null;
             }
 
