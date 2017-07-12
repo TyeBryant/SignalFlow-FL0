@@ -1,10 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using Dial;
 
-public class Node : MonoBehaviour {
+public class Node : MonoBehaviour
+{
 
-	public enum NodeType
+    public enum NodeType
     {
         ENT_NULL,
         ENT_MICROPHONE,
@@ -58,7 +61,7 @@ public class Node : MonoBehaviour {
 
     [HideInInspector]
     public GameObject powering, receiving;
-    
+
     [HideInInspector]
     public List<GameObject> lPowering = new List<GameObject>();
     [HideInInspector]
@@ -69,6 +72,12 @@ public class Node : MonoBehaviour {
 
     [HideInInspector]
     public LineRenderer lineRend;
+
+    public DialRotation Knob;
+    public Slider Fader;
+
+    public float knobValue;
+    public float faderValue;
 
     public void Start()
     {
@@ -81,14 +90,14 @@ public class Node : MonoBehaviour {
 
         //Stop playtesting if the channel or type is not set
         if (channel == SignalChannel.ESC_NULL || type == NodeType.ENT_NULL)
-            Debug.LogError("A signal channel or type has not been defined for a node!");      
+            Debug.LogError("A signal channel or type has not been defined for a node!");
 
         //If I'm a microphone make me the starting node
         if (type == NodeType.ENT_MICROPHONE)
             isPowered = true;
 
         //Find the connection manager in the scene
-        conMan = FindObjectOfType<ConnectionManager>();    
+        conMan = FindObjectOfType<ConnectionManager>();
     }
 
     public void Update()
@@ -98,26 +107,30 @@ public class Node : MonoBehaviour {
         {
             Connected(powering);
         }
+
+        knobValue = Knob.GetComponent<DialRotation>().dialValue;
+        faderValue = Fader.GetComponent<Slider>().value;
     }
 
     //The Sprite has been clicked
     public void OnMouseDown()
-    {   
+    {
         //Allow the player to pick up a signal
-        if(isPowered && !conMan.isCarryingSignal)
+        if (isPowered && !conMan.isCarryingSignal && knobValue > 0 && faderValue > 0)
         {
-            if (powering) {
+            if (powering)
+            {
                 MassDisconnect();
             }
             else
                 conMan.ProvideSignal(this.gameObject);
         }
         //Allow the player to place a signal down
-        else if(!isPowered && conMan.isCarryingSignal)
+        else if (!isPowered && conMan.isCarryingSignal)
         {
             EstablishSignalConnection();
         }
-        else if(isPowered && conMan.isCarryingSignal)
+        else if (isPowered && conMan.isCarryingSignal)
         {
             EstablishSignalConnection();
         }
@@ -137,8 +150,8 @@ public class Node : MonoBehaviour {
     public void Connected(GameObject poweredObject)
     {
         lineRend.SetPosition(0, this.gameObject.transform.position);
-        lineRend.SetPosition(1, poweredObject.transform.position); 
-    }    
+        lineRend.SetPosition(1, poweredObject.transform.position);
+    }
 
     public void MassDisconnect()
     {
@@ -148,7 +161,7 @@ public class Node : MonoBehaviour {
             powering.GetComponent<Node>().lReceiving.Remove(this.gameObject);
 
 
-            if (powering.GetComponent<Node>().lReceiving.Count == 0) 
+            if (powering.GetComponent<Node>().lReceiving.Count == 0)
             {
                 powering.GetComponent<Node>().receiving = null;
                 powering.GetComponent<Node>().isPowered = false;
@@ -161,15 +174,15 @@ public class Node : MonoBehaviour {
 
             lineRend.SetPosition(1, this.transform.position);
             if (powering)
-                lPowering.Remove(powering); 
+                lPowering.Remove(powering);
             if (lPowering.Count == 0)
                 powering = null;
         }
     }
 
-    public void DisconnectNode(GameObject poweredNode) 
+    public void DisconnectNode(GameObject poweredNode)
     {
-        if (lPowering.Contains(poweredNode)) 
+        if (lPowering.Contains(poweredNode))
         {
             if (poweredNode.GetComponent<Node>().lReceiving.Count <= 1)
                 poweredNode.GetComponent<Node>().MassDisconnect();
@@ -180,7 +193,7 @@ public class Node : MonoBehaviour {
     bool TypeChannelCheck(ConnectionManager connectionManager)
     {
         if (CheckType(connectionManager.powerFrom.GetComponent<Node>().type) && CheckChannel(connectionManager.powerFrom.GetComponent<Node>().channel))
-            return true;    
+            return true;
 
         return false;
     }
@@ -188,13 +201,13 @@ public class Node : MonoBehaviour {
     bool CheckType(NodeType givenType)
     {
         //Search through the array of possible type inputs
-        foreach(NodeType c in acceptedTypes)
+        foreach (NodeType c in acceptedTypes)
         {
             //If the given type is the same as c, then return true
             if (givenType == c)
                 return true;
         }
-        
+
         return false;
     }
 
@@ -257,3 +270,4 @@ public class Node : MonoBehaviour {
         }
     }
 }
+
