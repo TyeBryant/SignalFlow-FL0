@@ -50,6 +50,9 @@ public class Node : MonoBehaviour {
     [Tooltip("Determines the colour of the signal")]
     public Color signalColour;
 
+    [Tooltip("Determines whether the node can support multiple inputs")]
+    public int numInputs = 1;
+
     [HideInInspector]
     public bool isPowered;
 
@@ -122,7 +125,7 @@ public class Node : MonoBehaviour {
 
     void EstablishSignalConnection()
     {
-        if (TypeChannelCheck(conMan))
+        if (TypeChannelCheck(conMan) && lReceiving.Count < numInputs)
         {
             conMan.ConnectToNode(this.gameObject);
             conMan.DisconnectSignal();
@@ -150,14 +153,16 @@ public class Node : MonoBehaviour {
                 powering.GetComponent<Node>().receiving = null;
                 powering.GetComponent<Node>().isPowered = false;
                 powering.GetComponent<Node>().lPowering.Clear();
+                lPowering.Remove(powering);
 
                 powering.GetComponent<Node>().MassDisconnect();
-
+                Debug.Log(powering.name);
                 powering = null;
             }
 
             lineRend.SetPosition(1, this.transform.position);
-            lPowering.Remove(powering); 
+            if (powering)
+                lPowering.Remove(powering); 
             if (lPowering.Count == 0)
                 powering = null;
         }

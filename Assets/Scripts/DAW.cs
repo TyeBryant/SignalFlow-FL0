@@ -7,7 +7,7 @@ public class DAW : Node {
 	// Use this for initialization
 	void Start () {
 		base.Start();
-
+        numInputs = 2;
 	}
 	
 	// Update is called once per frame
