@@ -25,6 +25,11 @@ public class SceneChange : MonoBehaviour
         SceneManager.LoadScene("__CREDITS__");
     }
 
+    public void LevelSelectScene()
+    {
+        SceneManager.LoadScene("__LEVELSELECT__");
+    }
+
     public void Exit()
     {
 
