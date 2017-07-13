@@ -87,6 +87,11 @@ public class Node : MonoBehaviour
     public float knobValue;
     public float faderValue;
 
+    public LineShape lineS;
+    public GameObject triangle;
+    public float counter;
+    public Vector2 endPos;
+
     public void Start()
     {
         //Set up the LineRenderer
@@ -106,6 +111,10 @@ public class Node : MonoBehaviour
 
         //Find the connection manager in the scene
         conMan = FindObjectOfType<ConnectionManager>();
+
+        lineS = GetComponent<LineShape>();
+        
+        counter = 0;
     }
 
     public void Update()
@@ -113,6 +122,14 @@ public class Node : MonoBehaviour
         //If I'm connected, call Connected
         if (powering)
         {
+            counter += Time.deltaTime;
+            if(counter> 0.5f)
+            {
+                counter = 0;
+                GameObject tri1 = Instantiate(triangle, this.gameObject.transform.position, Quaternion.identity);
+                tri1.GetComponent<LineShape>().positionA = this.transform.position;
+                tri1.GetComponent<LineShape>().positionB = endPos;
+            }
             Connected(powering);
         }
 
@@ -151,6 +168,7 @@ public class Node : MonoBehaviour
             conMan.ConnectToNode(this.gameObject);
             conMan.DisconnectSignal();
             isPowered = true;
+
         }
     }
 
@@ -159,6 +177,10 @@ public class Node : MonoBehaviour
     {
         lineRend.SetPosition(0, this.gameObject.transform.position);
         lineRend.SetPosition(1, poweredObject.transform.position);
+        endPos = poweredObject.transform.position;
+
+
+
     }
 
     public void MassDisconnect()
@@ -178,6 +200,8 @@ public class Node : MonoBehaviour
 
                 powering.GetComponent<Node>().MassDisconnect();
                 powering = null;
+
+                
             }
 
             lineRend.SetPosition(1, this.transform.position);
@@ -196,6 +220,7 @@ public class Node : MonoBehaviour
                 poweredNode.GetComponent<Node>().MassDisconnect();
             lPowering.Remove(poweredNode);
         }
+        
     }
 
     bool TypeChannelCheck(ConnectionManager connectionManager)

@@ -16,7 +16,8 @@ public class DAW : Node {
 	// Update is called once per frame
 	void Update () {
 		base.Update();
-        
+        //knobValue = 1;
+        //faderValue = 1;
 	}
 
     private void OnMouseDown() {
