@@ -22,7 +22,15 @@ public class Node : MonoBehaviour
         ENT_AUXSENDS,
         ENT_AUXMASTERS,
         ENT_MONITOR,
-        ENT_HEADPHONES
+        ENT_HEADPHONES,
+        ENT_HEADPHONEAMP,
+        ENT_OTHERPATCHBAYNODES,
+        ENT_OUTPUT,
+        ENT_INPUT,
+        ENT_MIXB,
+        ENT_MIXBMAINMIX,
+        ENT_MIXBTOMAINMIX,
+        ENT_MAINMIX
     }
 
     public enum SignalChannel
