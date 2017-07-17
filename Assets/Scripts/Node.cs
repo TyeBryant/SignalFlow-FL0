@@ -157,6 +157,7 @@ public class Node : MonoBehaviour
         }
         else if (isPowered && conMan.isCarryingSignal)
         {
+            print("Running Function");
             EstablishSignalConnection();
         }
     }
