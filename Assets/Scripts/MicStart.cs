@@ -15,6 +15,8 @@ public class MicStart : MonoBehaviour
     private GameObject signal;
     public Transform nodePoweredTransform;
 
+    public List<GameObject> previousNodeList;
+
 	// Use this for initialization
 	void Start ()
     {
@@ -39,10 +41,23 @@ public class MicStart : MonoBehaviour
             GameObject currentNodeHolder = currentNode.GetComponent<Node>().powering;
             currentNode = currentNodeHolder;
             previousNode = currentNode.GetComponent<Node>().receiving;
+            previousNodeList.Add(previousNode);
         }
 
-        //Check to make sure previous and current node are still connected
+        if (previousNode.GetComponent<Node>().powering != currentNode)
+        {
+            int index = previousNodeList.Count - 1;
+            int removeIndex = previousNodeList.Count;
+            currentNode = previousNodeList[index];
+            signalObject.transform.position = currentNode.transform.position;
 
+            previousNodeList.RemoveAt(index);
+        }
         //Set up for multiple inputs
-	}
+        Debug.Log(previousNodeList.Count);
+
+        //Setting the material of the signal
+        currentNode.GetComponent<Node>().signalObject = signalObject.GetComponent<SignalFlowHolder>().signalFlowObjectType;
+
+    }
 }
