@@ -94,6 +94,8 @@ namespace nodeFunctionality
         public float counter;
         public Vector2 endPos;
 
+        public bool splitOutputs;
+
         public void Start()
         {
             //Set up the LineRenderer
@@ -152,6 +154,7 @@ namespace nodeFunctionality
                 else
                     conMan.ProvideSignal(this.gameObject);
             }
+
             //Allow the player to place a signal down
             else if (!isPowered && conMan.isCarryingSignal)
             {
