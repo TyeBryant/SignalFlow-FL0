@@ -94,8 +94,6 @@ namespace nodeFunctionality
         public float counter;
         public Vector2 endPos;
 
-        public bool splitOutputs;
-
         public void Start()
         {
             //Set up the LineRenderer
@@ -142,28 +140,38 @@ namespace nodeFunctionality
         }
 
         //The Sprite has been clicked
-        public void OnMouseDown()
+        public void OnMouseOver()
         {
-            //Allow the player to pick up a signal
-            if (isPowered && !conMan.isCarryingSignal && knobValue > 0 && faderValue > 0)
+            if (Input.GetMouseButtonDown(0))
+            {
+                //Allow the player to pick up a signal
+                if (isPowered && !conMan.isCarryingSignal && knobValue > 0 && faderValue > 0)
+                {
+                    if (powering)
+                    {
+                        //MassDisconnect();
+                    }
+                    else
+                        conMan.ProvideSignal(this.gameObject);
+                }
+
+                //Allow the player to place a signal down
+                else if (!isPowered && conMan.isCarryingSignal)
+                {
+                    EstablishSignalConnection();
+                }
+                else if (isPowered && conMan.isCarryingSignal)
+                {
+                    print("Running Function");
+                    EstablishSignalConnection();
+                }
+            }
+            if (Input.GetMouseButtonDown(1))
             {
                 if (powering)
                 {
                     MassDisconnect();
                 }
-                else
-                    conMan.ProvideSignal(this.gameObject);
-            }
-
-            //Allow the player to place a signal down
-            else if (!isPowered && conMan.isCarryingSignal)
-            {
-                EstablishSignalConnection();
-            }
-            else if (isPowered && conMan.isCarryingSignal)
-            {
-                print("Running Function");
-                EstablishSignalConnection();
             }
         }
 

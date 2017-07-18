@@ -27,7 +27,7 @@ namespace nodeFunctionality
 
         private void OnMouseDown()
         {
-            base.OnMouseDown();
+            base.OnMouseOver();
             signalColours.Clear();
             foreach (GameObject node in lReceiving)
             {
