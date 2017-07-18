@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using nodeFunctionality;
 using UnityEngine;
 
 public class SignalColourPicker : MonoBehaviour {

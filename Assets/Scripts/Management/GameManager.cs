@@ -8,6 +8,18 @@ namespace gameManagement
     {
         public bool gamePaused;
 
+        public GameObject[] signalFlowHolders;
+
+        //Here will be the bools that can be checked according to the level type
+        #region Enable Bools
+
+        #endregion
+
+        //Here the bools will coicide with the enabled bools
+        #region Bools
+
+        #endregion
+
         // Use this for initialization
         void Start()
         {
