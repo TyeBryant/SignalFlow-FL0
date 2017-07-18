@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using nodeFunctionality;
 using UnityEngine;
 
 namespace gameManagement
@@ -23,8 +24,12 @@ namespace gameManagement
 
         //Here the bools will coicide with the enabled bools
         #region Bools
-
+        public bool DAWConnected;
+        public bool monitorConnected;
+        public bool headphoneConnected;
         #endregion
+
+        public bool levelWin;
 
         // Use this for initialization
         void Start()
@@ -35,7 +40,21 @@ namespace gameManagement
         // Update is called once per frame
         void Update()
         {
+            if (levelOne == true)
+            {
+                if (DAWConnected == true && monitorConnected == true && headphoneConnected == true)
+                {
+                    levelWin = true;
+                }
+            }
 
+            if (levelTwo == true)
+            {
+                if (DAWConnected == true && monitorConnected == true && headphoneConnected == true)
+                {
+                    levelWin = true;
+                }
+            }
         }
     }
 }

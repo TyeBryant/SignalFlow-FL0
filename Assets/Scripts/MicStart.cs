@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using nodeFunctionality;
+using gameManagement;
 using UnityEngine;
 
 public class MicStart : MonoBehaviour
@@ -17,14 +18,18 @@ public class MicStart : MonoBehaviour
 
     public List<GameObject> previousNodeList;
 
-	// Use this for initialization
-	void Start ()
+    public GameManager gameManager;
+
+    // Use this for initialization
+    void Start ()
     {
         GameObject signal = Instantiate(signalObjectPrefab, this.transform.position, this.transform.rotation);
 
         signalObject = signal;
 
         signalObject.GetComponent<SignalFlowHolder>().signalFlowObjectType = this.GetComponent<Node>().signalObject;
+
+        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
 
         currentNode = this.gameObject;
 	}
@@ -59,5 +64,20 @@ public class MicStart : MonoBehaviour
         //Setting the material of the signal
         currentNode.GetComponent<Node>().signalObject = signalObject.GetComponent<SignalFlowHolder>().signalFlowObjectType;
 
+
+        if (currentNode.GetComponent<Node>().type == Node.NodeType.ENT_DAW)
+        {
+            gameManager.DAWConnected = true;
+        }
+
+        if (currentNode.GetComponent<Node>().type == Node.NodeType.ENT_MONITOR)
+        {
+            gameManager.monitorConnected = true;
+        }
+
+        if (currentNode.GetComponent<Node>().type == Node.NodeType.ENT_DAW)
+        {
+            gameManager.DAWConnected = true;
+        }
     }
 }

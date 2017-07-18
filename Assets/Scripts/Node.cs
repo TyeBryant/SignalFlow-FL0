@@ -69,7 +69,7 @@ namespace nodeFunctionality
         [HideInInspector]
         public bool isPowered;
 
-        //[HideInInspector]
+        [HideInInspector]
         public GameObject powering, receiving;
 
         [HideInInspector]
