@@ -21,6 +21,14 @@ namespace nodeFunctionality
         void Update()
         {
             base.Update();
+            for (int i = 0; i < lReceiving.Count; ++i)
+            {
+                if (lReceiving[i].GetComponent<Node>().signalColour == signalColour)
+                {
+                    receiving = lReceiving[i];
+                    signalObject = lReceiving[i].GetComponent<Node>().signalObject;
+                }
+            }
             //knobValue = 1;
             //faderValue = 1;
         }
