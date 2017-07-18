@@ -72,9 +72,9 @@ namespace nodeFunctionality
         [HideInInspector]
         public GameObject powering, receiving;
 
-        [HideInInspector]
+        //[HideInInspector]
         public List<GameObject> lPowering = new List<GameObject>();
-        [HideInInspector]
+        //[HideInInspector]
         public List<GameObject> lReceiving = new List<GameObject>();
 
         [HideInInspector]

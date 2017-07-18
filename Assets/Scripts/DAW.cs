@@ -9,6 +9,7 @@ namespace nodeFunctionality
 
         public List<Color> signalColours = new List<Color>();
         public List<GameObject> colourPickers = new List<GameObject>();
+        public List<Node> subDAWs = new List<Node>();
 
         // Use this for initialization
         void Start()
@@ -23,6 +24,8 @@ namespace nodeFunctionality
             base.Update();
             for (int i = 0; i < lReceiving.Count; ++i)
             {
+                subDAWs[i] = lReceiving[i].GetComponent<Node>();
+                subDAWs[i].signalObject = lReceiving[i].GetComponent<Node>().signalObject;
                 if (lReceiving[i].GetComponent<Node>().signalColour == signalColour)
                 {
                     receiving = lReceiving[i];
