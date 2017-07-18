@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class MicStart : MonoBehaviour
 {
+    public List<Node.NodeType> signalRequirements;
+
     public GameObject signalObjectPrefab;
     public GameObject signalObject;
 
@@ -64,6 +66,24 @@ public class MicStart : MonoBehaviour
         //Setting the material of the signal
         currentNode.GetComponent<Node>().signalObject = signalObject.GetComponent<SignalFlowHolder>().signalFlowObjectType;
 
+        if (previousNodeList.Count == signalRequirements.Count)
+        {
+            bool winning = false;
+            for (int i = 0; i < signalRequirements.Count; ++i)
+            {
+                if (previousNodeList[i].GetComponent<Node>().type == signalRequirements[i])
+                {
+                    winning = true;
+                }
+                else
+                {
+                    winning = false;
+                    break;
+                }
+            }
+            if (winning)
+                gameManager.win = true;
+        }
 
         if (currentNode.GetComponent<Node>().type == Node.NodeType.ENT_DAW)
         {
@@ -75,9 +95,9 @@ public class MicStart : MonoBehaviour
             gameManager.monitorConnected = true;
         }
 
-        if (currentNode.GetComponent<Node>().type == Node.NodeType.ENT_DAW)
+        if (currentNode.GetComponent<Node>().type == Node.NodeType.ENT_HEADPHONES)
         {
-            gameManager.DAWConnected = true;
+            gameManager.headphoneConnected = true;
         }
     }
 }

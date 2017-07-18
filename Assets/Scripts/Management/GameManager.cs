@@ -27,6 +27,7 @@ namespace gameManagement
         public bool DAWConnected;
         public bool monitorConnected;
         public bool headphoneConnected;
+        public bool win;
         #endregion
 
         public bool levelWin;
