@@ -32,7 +32,8 @@ namespace nodeFunctionality
             ENT_MIXB,
             ENT_MIXBMAINMIX,
             ENT_MIXBTOMAINMIX,
-            ENT_MAINMIX
+            ENT_MAINMIX,
+            ENT_DEAD
         }
 
         public enum SignalChannel
@@ -157,6 +158,10 @@ namespace nodeFunctionality
                     tri1.GetComponent<LineShape>().positionB = endPos;
                 }
                 Connected(powering);
+            }
+            if (type == NodeType.ENT_DEAD) {
+                powering = null;
+                lPowering.Clear();
             }
         }
 
