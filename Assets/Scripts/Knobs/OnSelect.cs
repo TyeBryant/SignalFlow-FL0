@@ -18,19 +18,22 @@ public class OnSelect : MonoBehaviour {
 
     private void Update()
     {
-        if (dialSelect == true)
+        if (dial != null)
         {
-            dial.SetActive(true);
-        }
+            if (dialSelect == true)
+            {
+                dial.SetActive(true);
+            }
 
-        if (dialSelect == false)
-        {
-            dial.SetActive(false);
-        }
+            if (dialSelect == false)
+            {
+                dial.SetActive(false);
+            }
 
-        if (gameManager.GetComponent<GameManager>().gamePaused == true)
-        {
-            dialSelect = false; 
+            if (gameManager.GetComponent<GameManager>().gamePaused == true)
+            {
+                dialSelect = false;
+            }
         }
     }
 

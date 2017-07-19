@@ -21,4 +21,9 @@ public class SignalFlowHolder : MonoBehaviour
     {
 		
 	}
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("I'm in the same spot!");
+    }
 }

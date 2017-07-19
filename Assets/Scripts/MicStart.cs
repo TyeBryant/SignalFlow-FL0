@@ -9,18 +9,24 @@ public class MicStart : MonoBehaviour
     public List<Node.NodeType> signalRequirements;
 
     public GameObject signalObjectPrefab;
+
+    [HideInInspector]
     public GameObject signalObject;
 
     //Can be used by gameobject to check bools
+    [HideInInspector]
     public GameObject currentNode;
+
+    [HideInInspector]
     public GameObject previousNode;
 
     private GameObject signal;
     public Transform nodePoweredTransform;
 
+    [HideInInspector]
     public List<GameObject> previousNodeList;
 
-    public GameManager gameManager;
+    private GameManager gameManager;
 
     // Use this for initialization
     void Start ()
@@ -51,15 +57,19 @@ public class MicStart : MonoBehaviour
             previousNodeList.Add(previousNode);
         }
 
-        if (previousNode.GetComponent<Node>().powering != currentNode)
+        if (currentNode.GetComponent<Node>().type != Node.NodeType.ENT_MICROPHONE)
         {
-            int index = previousNodeList.Count - 1;
-            int removeIndex = previousNodeList.Count;
-            currentNode = previousNodeList[index];
-            signalObject.transform.position = currentNode.transform.position;
+            if (previousNode.GetComponent<Node>().powering != currentNode)
+            {
+                int index = previousNodeList.Count - 1;
+                int removeIndex = previousNodeList.Count;
+                currentNode = previousNodeList[index];
+                signalObject.transform.position = currentNode.transform.position;
 
-            previousNodeList.RemoveAt(index);
+                previousNodeList.RemoveAt(index);
+            }
         }
+
         //Set up for multiple inputs
         Debug.Log(previousNodeList.Count);
 
@@ -83,21 +93,6 @@ public class MicStart : MonoBehaviour
             }
             if (winning)
                 gameManager.win = true;
-        }
-
-        if (currentNode.GetComponent<Node>().type == Node.NodeType.ENT_DAW)
-        {
-            gameManager.DAWConnected = true;
-        }
-
-        if (currentNode.GetComponent<Node>().type == Node.NodeType.ENT_MONITOR)
-        {
-            gameManager.monitorConnected = true;
-        }
-
-        if (currentNode.GetComponent<Node>().type == Node.NodeType.ENT_HEADPHONES)
-        {
-            gameManager.headphoneConnected = true;
         }
     }
 }

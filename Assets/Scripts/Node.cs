@@ -72,9 +72,9 @@ namespace nodeFunctionality
         [HideInInspector]
         public GameObject powering, receiving;
 
-        //[HideInInspector]
+        [HideInInspector]
         public List<GameObject> lPowering = new List<GameObject>();
-        //[HideInInspector]
+        [HideInInspector]
         public List<GameObject> lReceiving = new List<GameObject>();
 
         [HideInInspector]
@@ -86,12 +86,18 @@ namespace nodeFunctionality
         public DialRotation Knob;
         public Slider Fader;
 
+        [HideInInspector]
         public float knobValue;
+        [HideInInspector]
         public float faderValue;
 
         public LineShape lineS;
         public GameObject signalObject;
+
+        [HideInInspector]
         public float counter;
+
+        [HideInInspector]
         public Vector2 endPos;
 
         public void Start()
@@ -121,6 +127,16 @@ namespace nodeFunctionality
 
         public void Update()
         {
+            if (Knob == null)
+            {
+                knobValue = 1;
+            }
+
+            if (Fader == null)
+            {
+                faderValue = 1;
+            }
+
             //If I'm connected, call Connected
             if (powering)
             {
