@@ -69,7 +69,7 @@ namespace nodeFunctionality
         [HideInInspector]
         public bool isPowered;
 
-        [HideInInspector]
+        //[HideInInspector]
         public GameObject powering, receiving;
 
         [HideInInspector]
@@ -131,10 +131,18 @@ namespace nodeFunctionality
             {
                 knobValue = 1;
             }
+            else
+            {
+                knobValue = Knob.GetComponent<DialRotation>().dialValue;
+            }
 
             if (Fader == null)
             {
                 faderValue = 1;
+            }
+            else
+            {
+                faderValue = Fader.GetComponent<Slider>().value;
             }
 
             //If I'm connected, call Connected
@@ -150,9 +158,6 @@ namespace nodeFunctionality
                 }
                 Connected(powering);
             }
-
-            knobValue = Knob.GetComponent<DialRotation>().dialValue;
-            faderValue = Fader.GetComponent<Slider>().value;
         }
 
         //The Sprite has been clicked

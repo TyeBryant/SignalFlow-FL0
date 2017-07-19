@@ -45,16 +45,16 @@ public class MicStart : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-		if (currentNode.GetComponent<Node>().powering != null)
+		if (currentNode.GetComponent<Node>().powering != null && currentNode.GetComponent<Node>().powering.GetComponent<Node>().signalObject == null)
         {
-            Debug.Log("powering");
-            nodePoweredTransform = currentNode.GetComponent<Node>().powering.transform;
-            signalObject.transform.position = nodePoweredTransform.position;
+                Debug.Log("powering");
+                nodePoweredTransform = currentNode.GetComponent<Node>().powering.transform;
+                signalObject.transform.position = nodePoweredTransform.position;
 
-            GameObject currentNodeHolder = currentNode.GetComponent<Node>().powering;
-            currentNode = currentNodeHolder;
-            previousNode = currentNode.GetComponent<Node>().receiving;
-            previousNodeList.Add(previousNode);
+                GameObject currentNodeHolder = currentNode.GetComponent<Node>().powering;
+                currentNode = currentNodeHolder;
+                previousNode = currentNode.GetComponent<Node>().receiving;
+                previousNodeList.Add(previousNode);
         }
 
         if (currentNode.GetComponent<Node>().type != Node.NodeType.ENT_MICROPHONE)
@@ -69,9 +69,6 @@ public class MicStart : MonoBehaviour
                 previousNodeList.RemoveAt(index);
             }
         }
-
-        //Set up for multiple inputs
-        Debug.Log(previousNodeList.Count);
 
         //Setting the material of the signal
         currentNode.GetComponent<Node>().signalObject = signalObject.GetComponent<SignalFlowHolder>().signalFlowObjectType;
