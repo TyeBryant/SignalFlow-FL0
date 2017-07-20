@@ -30,14 +30,10 @@ public class LineShape : MonoBehaviour {
 
             counter += Time.deltaTime;
 
-
-
             if (counter > 2.0f)
             {
-
                 counter = 0;
                 Destroy(this.gameObject);
-                
             }
 
             transform.position = Vector2.Lerp(positionA, positionB, counter / 2.0f);

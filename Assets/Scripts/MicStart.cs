@@ -45,7 +45,7 @@ public class MicStart : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-		if (currentNode.GetComponent<Node>().powering != null && currentNode.GetComponent<Node>().powering.GetComponent<Node>().signalObject == null)
+		if (currentNode.GetComponent<Node>().powering != null) //&& currentNode.GetComponent<Node>().powering.GetComponent<Node>().signalObject == null)
         {
                 Debug.Log("powering");
                 nodePoweredTransform = currentNode.GetComponent<Node>().powering.transform;
