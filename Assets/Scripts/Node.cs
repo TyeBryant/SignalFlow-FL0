@@ -46,9 +46,6 @@ namespace nodeFunctionality
             ESC_ALL
         }
 
-        [Tooltip("What color is each channel? Ordered from Channel One to Channel All (5) elements maximum")]
-        public Material[] channelColours;
-
         [Tooltip("Determines my node type")]
         public NodeType type;
 
@@ -103,6 +100,8 @@ namespace nodeFunctionality
 
         public void Start()
         {
+
+
             //Set up the LineRenderer
             lineRend = this.gameObject.AddComponent<LineRenderer>();
             LineRendererSetup(lineRend);
@@ -113,6 +112,12 @@ namespace nodeFunctionality
             //Stop playtesting if the channel or type is not set
             if (channel == SignalChannel.ESC_NULL || type == NodeType.ENT_NULL)
                 Debug.LogError("A signal channel or type has not been defined for a node!");
+
+            if (acceptedChannels.Length == 0 || acceptedTypes.Length == 0)
+                Debug.LogError("The accepted channels or types have not been set for this object!");
+
+            if (numInputs == 0 && type != NodeType.ENT_MICROPHONE)
+                Debug.LogError("The number of acceptable inputs has not been set for this object!");
 
             //If I'm a microphone make me the starting node
             if (type == NodeType.ENT_MICROPHONE)
@@ -307,40 +312,6 @@ namespace nodeFunctionality
         {
             l.startWidth = 0.5f;
             l.endWidth = 0.01f;
-
-            //Choose Material Based on Channel
-            switch (channel)
-            {
-                case SignalChannel.ESC_ONE:
-                    {
-                        l.material = channelColours[0];
-                    }
-                    break;
-
-                case SignalChannel.ESC_TWO:
-                    {
-                        l.material = channelColours[1];
-                    }
-                    break;
-
-                case SignalChannel.ESC_THREE:
-                    {
-                        l.material = channelColours[2];
-                    }
-                    break;
-
-                case SignalChannel.ESC_FOUR:
-                    {
-                        l.material = channelColours[3];
-                    }
-                    break;
-
-                case SignalChannel.ESC_ALL:
-                    {
-                        l.material = channelColours[4];
-                    }
-                    break;
-            }
         }
     }
 }
