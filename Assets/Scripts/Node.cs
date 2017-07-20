@@ -92,7 +92,7 @@ namespace nodeFunctionality
         [HideInInspector]
         public float faderValue;
 
-        public LineShape lineS;
+        
         public GameObject signalObject;
 
         [HideInInspector]
@@ -121,7 +121,7 @@ namespace nodeFunctionality
             //Find the connection manager in the scene
             conMan = FindObjectOfType<ConnectionManager>();
 
-            lineS = GetComponent<LineShape>();
+            
 
             counter = 0;
         }

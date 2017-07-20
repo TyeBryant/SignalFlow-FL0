@@ -6,10 +6,6 @@ using UnityEngine;
 public class LineShape : MonoBehaviour {
 
     public bool call = false;
-
-    public GameObject[] shape;
-    public GameObject triangle;
-
     public GameObject tri1;
 
     public float counter = 0;
