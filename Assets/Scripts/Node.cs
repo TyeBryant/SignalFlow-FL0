@@ -89,7 +89,7 @@ namespace nodeFunctionality
         [HideInInspector]
         public float faderValue;
 
-        
+       
         public GameObject signalObject;
 
         [HideInInspector]
@@ -125,8 +125,10 @@ namespace nodeFunctionality
 
             //Find the connection manager in the scene
             conMan = FindObjectOfType<ConnectionManager>();
-
             
+            //For certain note(exp DAW) have multiple input
+            if (type == NodeType.ENT_DAW)
+                numInputs = 100;
 
             counter = 0;
         }
