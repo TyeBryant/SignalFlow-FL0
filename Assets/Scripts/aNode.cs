@@ -71,7 +71,6 @@ public class aNode : MonoBehaviour {
     [HideInInspector]
     public List<GameObject> inputs = new List<GameObject>(), outputs = new List<GameObject>();
 
-    [HideInInspector]
     public bool isPowered = false;
 
     [HideInInspector]
@@ -101,11 +100,6 @@ public class aNode : MonoBehaviour {
 
         if (maximumInputs == 0 || maximumOutputs == 0)
             Debug.LogError(this.gameObject.name + " has no designated number of maximum outputs or inputs");
-        
-        ///Initialisations        
-        //If the node is a microphone
-        if (nodeType == Type.ET_MICROPHONE)
-            isPowered = true;
 	}
 	
 	// Update is called once per frame
