@@ -66,13 +66,13 @@ public class aNode : MonoBehaviour {
     [Tooltip("Determines the channel of this node")]
     public Channel nodeChannel;
 
-    public int maximumInputs = 1, maximumOutputs = 1;
+    public int maximumInputs, maximumOutputs;
 
     [HideInInspector]
     public List<GameObject> inputs = new List<GameObject>(), outputs = new List<GameObject>();
 
     [HideInInspector]
-    public bool isPowered;
+    public bool isPowered = false;
 
     [HideInInspector]
     aConnectionManager connectionManager;
@@ -129,6 +129,7 @@ public class aNode : MonoBehaviour {
                 //  Manage picking up the signal
                 if(outputs.Count < maximumOutputs)
                 {
+                    print("MaxOut: "+ maximumOutputs);
                     connectionManager.CarrySignal(this.gameObject);
                 }                    
             }
@@ -160,10 +161,7 @@ public class aNode : MonoBehaviour {
 
     public void ShowConnections()
     {
-        for(int i = 0; i < outputs.Count; ++i)
-        {
-            Debug.DrawLine(this.gameObject.transform.position, outputs[i].transform.position, Color.blue);
-        }   
+        outputs.ForEach((GameObject g)=>Debug.DrawLine(this.gameObject.transform.position, g.transform.position, Color.blue)); 
     }
 
     public void Disconnect()
@@ -201,6 +199,7 @@ public class aNode : MonoBehaviour {
             if (t == connectionManager.inputFrom.GetComponent<aNode>().nodeType)
             {
                 ret = true;
+                print("checked");
             }
         }
         return ret;
@@ -211,11 +210,15 @@ public class aNode : MonoBehaviour {
     {
         if (!outputs.Contains(_outputTo))
         {
-            _outputTo.GetComponent<aNode>().inputs.Add(this.gameObject);
+            connectionManager.inputFrom = null;
+            connectionManager.isCarryingSignal = false;
+
             _outputTo.GetComponent<aNode>().nodeChannel = nodeChannel;
+            _outputTo.GetComponent<aNode>().isPowered = true;
+            _outputTo.GetComponent<aNode>().inputs.Add(this.gameObject);
             outputs.Add(_outputTo);
+
             print(this.gameObject.name + " " + outputs.Count);
-            connectionManager.DisconnectSignal();
         }
     }
 }

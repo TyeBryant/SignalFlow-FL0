@@ -29,7 +29,9 @@ public class ConnectionManager : MonoBehaviour {
 
             //If the player right clicks, drop the current signal
             if (Input.GetMouseButtonDown(1))
-                DisconnectSignal();
+            {
+
+            }
         }
 	}
 

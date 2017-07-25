@@ -29,7 +29,10 @@ public class aConnectionManager : MonoBehaviour {
             Debug.DrawLine(mousePointer.transform.position, inputFrom.transform.position, Color.blue);
             //If the player right clicks, disconnect from the signal
             if (Input.GetMouseButtonDown(1))
-                DisconnectSignal();
+            {
+                inputFrom = null;
+                isCarryingSignal = false;
+            }
         }
 	}
 
