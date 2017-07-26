@@ -61,6 +61,10 @@ public class SignalFlowObject : MonoBehaviour
         }
 
         //If list is empty and current node doesn't equal mic, delete yourself
+        if (previousNodeList.Count == 0 && currentNode.GetComponent<aNode>().nodeType != aNode.Type.ET_MICROPHONE)
+        {
+            Destroy(this.gameObject);
+        }
 
         //Setting the material of the signal
         currentNode.GetComponent<aNode>().signalObject = this.GetComponent<SignalFlowHolder>().signalFlowObjectType;
