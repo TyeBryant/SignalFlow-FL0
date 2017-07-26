@@ -13,7 +13,9 @@ public class DialFaderFunctionality : MonoBehaviour
     public GameObject dial;
     public GameObject fader;
 
+    [HideInInspector]
     public float dValue;
+    [HideInInspector]
     public float fValue;
 
     private GameObject gameManager;
