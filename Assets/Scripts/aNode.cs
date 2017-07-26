@@ -77,6 +77,10 @@ public class aNode : MonoBehaviour {
 
     public List<GameObject> connectionRenderers = new List<GameObject>();
 
+    public GameObject signalObject;
+
+    public float counter;
+
     [HideInInspector]
     aConnectionManager connectionManager;
 
@@ -104,6 +108,8 @@ public class aNode : MonoBehaviour {
 
         if (maximumInputs == 0 || maximumOutputs == 0)
             Debug.LogError(this.gameObject.name + " has no designated number of maximum outputs or inputs");
+
+        counter = 0;
 	}
 	
 	// Update is called once per frame
@@ -112,6 +118,21 @@ public class aNode : MonoBehaviour {
         if (outputs.Count > 0)
         {
             ShowConnections();
+        }
+        
+        if (connectionRenderers != null)
+        {
+            for (int index = 0; index < connectionRenderers.Count; index++)
+            {
+                counter += Time.deltaTime;
+                if (counter > 0.5f)
+                {
+                    counter = 0;
+                    GameObject tri1 = Instantiate(signalObject, this.gameObject.transform.position, Quaternion.identity);
+                    tri1.GetComponent<LineShape>().positionA = connectionRenderers[index].GetComponent<LineRenderer>().GetPosition(0);
+                    tri1.GetComponent<LineShape>().positionB = connectionRenderers[index].GetComponent<LineRenderer>().GetPosition(1);
+                }
+            }
         }            
 	}
 
