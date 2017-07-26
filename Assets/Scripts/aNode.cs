@@ -68,10 +68,14 @@ public class aNode : MonoBehaviour {
 
     public int maximumInputs, maximumOutputs;
 
+    public bool isPowered = false;
+
+    public GameObject lineRenderPrefab;
+
     [HideInInspector]
     public List<GameObject> inputs = new List<GameObject>(), outputs = new List<GameObject>();
 
-    public bool isPowered = false;
+    public List<GameObject> connectionRenderers = new List<GameObject>();
 
     [HideInInspector]
     aConnectionManager connectionManager;
@@ -161,9 +165,10 @@ public class aNode : MonoBehaviour {
     public void Disconnect()
     {
         //For all object's getting a signal from me
-        foreach(GameObject output in outputs)
+        int tempCount = outputs.Count;
+        for (int i = 0; i < tempCount; ++i)
         {
-            aNode outN = output.GetComponent<aNode>();
+            aNode outN = outputs[0].GetComponent<aNode>();
 
             //Remove this node from it's input list
             outN.inputs.Remove(this.gameObject);
@@ -177,8 +182,11 @@ public class aNode : MonoBehaviour {
                 outN.isPowered = false;
 
             //Remove the object from the outputs list
-            outputs.Remove(output);
-        }
+            outputs.Remove(outputs[0]);   
+
+            Destroy(connectionRenderers[0]);
+            connectionRenderers.Remove(connectionRenderers[0]);
+        }       
     }
 
     //Checks whether or not a connection can be established
@@ -211,6 +219,12 @@ public class aNode : MonoBehaviour {
             _outputTo.GetComponent<aNode>().isPowered = true;
             _outputTo.GetComponent<aNode>().inputs.Add(this.gameObject);
             outputs.Add(_outputTo);
+
+            GameObject lineRendObj = Instantiate(lineRenderPrefab);
+            connectionRenderers.Add(lineRendObj);
+
+            LineRenderer lineRend = lineRendObj.GetComponent<LineRenderer>();
+            lineRend.SetPositions(new Vector3[] { transform.position, _outputTo.transform.position });
 
             print(this.gameObject.name + " " + outputs.Count);
         }
