@@ -84,8 +84,10 @@ public class aNode : MonoBehaviour {
     [HideInInspector]
     aConnectionManager connectionManager;
 
-	// Use this for initialization
-	void Start () {
+    public GameObject signalObjectPrefab;
+
+    // Use this for initialization
+    void Start () {
 
         ///Errors and Warnings
         //If the node type is not define, throw an error
@@ -246,6 +248,13 @@ public class aNode : MonoBehaviour {
 
             LineRenderer lineRend = lineRendObj.GetComponent<LineRenderer>();
             lineRend.SetPositions(new Vector3[] { transform.position, _outputTo.transform.position });
+
+            if (outputs.Count > 1)
+            {
+                GameObject signal = Instantiate(signalObjectPrefab, _outputTo.transform.position, _outputTo.transform.rotation);
+                signal.GetComponent<SignalFlowObject>().previousNode = this.gameObject;
+                signal.GetComponent<SignalFlowObject>().currentNode = _outputTo;
+            }
 
             print(this.gameObject.name + " " + outputs.Count);
         }
