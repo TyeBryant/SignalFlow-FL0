@@ -45,6 +45,11 @@ public class PatchBay : aNode, IPointerClickHandler {
             {
                 inputNodes[i].SetActive(true);
                 outputNodes[i].SetActive(true);
+
+                foreach (GameObject nodes in inputNodes)
+                {
+                    nodes.GetComponent<aNode>().maximumInputs = 1;
+                }
             }
 
             GetComponent<CircleCollider2D>().enabled = false;
