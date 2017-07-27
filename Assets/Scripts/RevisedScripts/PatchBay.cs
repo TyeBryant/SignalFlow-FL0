@@ -17,15 +17,15 @@ public class PatchBay : aNode, IPointerClickHandler {
 
     public int numList;
 
-    //private void Start()
-    //{
-    //    foreach (GameObject node in inputNodes)
-    //        node.SetActive(false);
-    //    foreach (GameObject node in outputNodes)
-    //        node.SetActive(false);
-    //    foreach (GameObject node in settingNodes)
-    //        node.SetActive(false);
-    //}
+    private void Start()
+    {
+        foreach (GameObject node in inputNodes)
+            node.SetActive(false);
+        foreach (GameObject node in outputNodes)
+            node.SetActive(false);
+        foreach (GameObject node in settingNodes)
+            node.SetActive(false);
+    }
 
     void IPointerClickHandler.OnPointerClick(PointerEventData eventData) {
         if (eventData.clickCount >= 2 && !zoomed) {
@@ -33,12 +33,20 @@ public class PatchBay : aNode, IPointerClickHandler {
             zooming = true;
             zoomed = true;
             numList = inputNodes.Count;
-            foreach (GameObject node in inputNodes)
-                node.SetActive(true);
-            foreach (GameObject node in outputNodes)
-                node.SetActive(true);
+            //foreach (GameObject node in inputNodes)
+            //{
+            //    node.SetActive(true);
+            //}   
+            //foreach (GameObject node in outputNodes)
+            //    node.SetActive(true);
             foreach (GameObject node in settingNodes)
                 node.SetActive(true);
+            for (int i = 0; i <= inputs.Count - 1; i++)
+            {
+                inputNodes[i].SetActive(true);
+                outputNodes[i].SetActive(true);
+            }
+
             GetComponent<CircleCollider2D>().enabled = false;
         }
         else if (eventData.clickCount < 2 && !zoomed) {
@@ -47,11 +55,15 @@ public class PatchBay : aNode, IPointerClickHandler {
                 foreach (GameObject node in outputNodes)
                     node.SetActive(false);
             else
-                foreach (GameObject node in outputNodes) {
-                    node.SetActive(true);
-
+                //foreach (GameObject node in outputNodes) {
+                //    node.SetActive(true);
+                for (int i = 0; i <= inputs.Count - 1; i++)
+                {
+                    outputNodes[i].SetActive(true);
                 }
+
         }
+        
         
     }
 
