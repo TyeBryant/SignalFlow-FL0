@@ -44,7 +44,7 @@ public class aNode : MonoBehaviour {
         ET_MIXBTOMAINMIX,
         ET_MAINMIX,
 		ET_LOCAL,
-		ET_REVERB
+		ET_REVERB,
 		ET_COMPRESSION,
         ET_DEAD
     }
