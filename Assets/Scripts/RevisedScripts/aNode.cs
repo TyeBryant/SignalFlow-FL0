@@ -198,10 +198,6 @@ public class aNode : MonoBehaviour {
             //Remove this node from it's input list
             outN.inputs.Remove(this.gameObject);
 
-            //If this node is providing power to others
-            if (outN.outputs.Count > 0)
-                outN.Disconnect();
-
             //If there is no more inputs from anything,this node is no longer powered
             if (outN.inputs.Count == 0)
                 outN.isPowered = false;
@@ -229,6 +225,15 @@ public class aNode : MonoBehaviour {
                 print("checked");
             }
         }
+
+        //If the node's channel is null, or the nodes channel is the same as mine, return true if not, return false
+        if (connectionManager.inputFrom.GetComponent<aNode>().nodeChannel == Channel.EC_NULL)
+            ret = true;
+        else if (connectionManager.inputFrom.GetComponent<aNode>().nodeChannel == nodeChannel)
+            ret = true;
+        else
+            ret = false;
+
         return ret;
     }
     
@@ -237,10 +242,16 @@ public class aNode : MonoBehaviour {
     {
         if (!outputs.Contains(_outputTo))
         {
+            //If this node's channel is null, and the output's node is not null or multiple
+            if(nodeChannel == Channel.EC_NULL && (_outputTo.GetComponent<aNode>().nodeChannel != Channel.EC_NULL || _outputTo.GetComponent<aNode>().nodeChannel != Channel.EC_MULTI))
+            {
+                nodeChannel = _outputTo.GetComponent<aNode>().nodeChannel;
+            } else
+                _outputTo.GetComponent<aNode>().nodeChannel = nodeChannel;
+
             connectionManager.inputFrom = null;
             connectionManager.isCarryingSignal = false;
-
-            _outputTo.GetComponent<aNode>().nodeChannel = nodeChannel;
+            
             _outputTo.GetComponent<aNode>().isPowered = true;
             _outputTo.GetComponent<aNode>().inputs.Add(this.gameObject);
             outputs.Add(_outputTo);
@@ -257,8 +268,6 @@ public class aNode : MonoBehaviour {
                 signal.GetComponent<SignalFlowObject>().previousNode = this.gameObject;
                 signal.GetComponent<SignalFlowObject>().currentNode = _outputTo;
             }
-
-            print(this.gameObject.name + " " + outputs.Count);
         }
     }
 }
