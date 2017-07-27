@@ -75,10 +75,12 @@ public class aNode : MonoBehaviour {
     [HideInInspector]
     public List<GameObject> inputs = new List<GameObject>(), outputs = new List<GameObject>();
 
+    [HideInInspector]
     public List<GameObject> connectionRenderers = new List<GameObject>();
 
     public GameObject signalObject;
 
+    [HideInInspector]
     public float counter;
 
     [HideInInspector]

@@ -43,6 +43,12 @@ public class SignalFlowObject : MonoBehaviour
 
             previousNode = currentNode;
             previousNodeList.Add(previousNode);
+
+            //Some game manager stuff
+            gameManager.previousNodeList.Add(previousNode);
+            aNode.Type type = previousNode.GetComponent<aNode>().nodeType;
+            gameManager.previousNodeListTypes.Add(type);
+
             GameObject currentNodeHolder = currentNode.GetComponent<aNode>().outputs[0];
             currentNode = currentNodeHolder;
         }
@@ -56,7 +62,12 @@ public class SignalFlowObject : MonoBehaviour
                 currentNode = previousNodeList[index];
                 this.transform.position = currentNode.transform.position;
 
+                GameObject pn = previousNodeList[index];
+                aNode.Type pnType = pn.GetComponent<aNode>().nodeType;
                 previousNodeList.RemoveAt(index);
+
+                gameManager.previousNodeList.Remove(pn);
+                gameManager.previousNodeListTypes.Remove(pnType);
             }
         }
 

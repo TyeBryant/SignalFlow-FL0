@@ -7,7 +7,7 @@ public class SignalFlowStart : MonoBehaviour
 {
     public GameObject signalObjectPrefab;
 
-    //[HideInInspector]
+    [HideInInspector]
     public GameObject signalObject;
 
     private GameManager gameManager;
