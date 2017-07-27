@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class aConnectionManager : MonoBehaviour {
+public class aConnectionManager : MonoBehaviour
+{
 
     [HideInInspector]
     public bool isCarryingSignal = false;
@@ -12,14 +13,20 @@ public class aConnectionManager : MonoBehaviour {
     Camera camera;
     Vector3 mousePosition = new Vector3(0, 0, 0);
 
-	// Use this for initialization
-	void Start () {
+    public GameObject lineRenderPrefab;
+    public GameObject lineRendObj;
+    LineRenderer lineRend;
+
+    // Use this for initialization
+    void Start()
+    {
         //Retrieve the camera
         camera = GetComponent<Camera>();
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
 
         mousePosition = camera.ScreenToWorldPoint(Input.mousePosition);
         mousePointer.transform.position = new Vector3(mousePosition.x, mousePosition.y, 0);
@@ -27,14 +34,31 @@ public class aConnectionManager : MonoBehaviour {
         if (isCarryingSignal)
         {
             Debug.DrawLine(mousePointer.transform.position, inputFrom.transform.position, Color.blue);
+
+            if (Input.GetMouseButtonDown(0) && lineRend == null)
+            {
+                lineRendObj = Instantiate(lineRenderPrefab);
+                lineRend = lineRendObj.GetComponent<LineRenderer>();
+                lineRend.SetPosition(0, inputFrom.transform.position);
+            }
+            else if (Input.GetMouseButtonDown(0) && lineRend != null)
+                isCarryingSignal = false;
+
+            lineRend.SetPosition(1, mousePointer.transform.position);
+
             //If the player right clicks, disconnect from the signal
             if (Input.GetMouseButtonDown(1))
             {
+                Destroy(lineRendObj);
                 inputFrom = null;
                 isCarryingSignal = false;
             }
         }
-	}
+        else
+        {
+            Destroy(lineRendObj);
+        }
+    }
 
     //Disconnect the signal from the mouse pointer
     public void DisconnectSignal()

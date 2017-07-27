@@ -5,17 +5,15 @@ using UnityEngine;
 
 public class SignalFlowObject : MonoBehaviour
 {
-    public List<aNode.Type> signalRequirements;
-
-    //[HideInInspector]
+    [HideInInspector]
     public GameObject currentNode;
 
-    //[HideInInspector]
+    [HideInInspector]
     public GameObject previousNode;
 
     public Transform nodePoweredTransform;
 
-    //[HideInInspector]
+    [HideInInspector]
     public List<GameObject> previousNodeList;
 
     public GameObject signalFlowObjectType;
@@ -23,15 +21,20 @@ public class SignalFlowObject : MonoBehaviour
     public GameManager gameManager;
 
     // Use this for initialization
-    void Start ()
+    void Start()
     {
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
     }
-	
-	// Update is called once per frame
-	void Update ()
+
+    // Update is called once per frame
+    void Update()
     {
         if (currentNode.GetComponent<aNode>().outputs == null)
+        {
+            return;
+        }
+
+        if (previousNodeList == null)
         {
             return;
         }
@@ -53,7 +56,7 @@ public class SignalFlowObject : MonoBehaviour
             currentNode = currentNodeHolder;
         }
 
-        if (currentNode.GetComponent<aNode>().nodeType != aNode.Type.ET_MICROPHONE)
+        if (currentNode.GetComponent<aNode>().nodeType != aNode.Type.ET_MICROPHONE && previousNodeList.Count != 0)
         {
             if (previousNode.GetComponent<aNode>().outputs[0] != currentNode)
             {
@@ -71,7 +74,7 @@ public class SignalFlowObject : MonoBehaviour
             }
         }
 
-        //If list is empty and current node doesn't equal mic, delete yourself
+        //If list is empty and current node doesn't equal mic, kill yourself
         if (previousNodeList.Count == 0 && currentNode.GetComponent<aNode>().nodeType != aNode.Type.ET_MICROPHONE)
         {
             Destroy(this.gameObject);
@@ -79,24 +82,5 @@ public class SignalFlowObject : MonoBehaviour
 
         //Setting the material of the signal
         currentNode.GetComponent<aNode>().signalObject = this.GetComponent<SignalFlowHolder>().signalFlowObjectType;
-
-        if (previousNodeList.Count == signalRequirements.Count)
-        {
-            bool winning = false;
-            for (int i = 0; i < signalRequirements.Count; ++i)
-            {
-                if (previousNodeList[i].GetComponent<aNode>().nodeType == signalRequirements[i])
-                {
-                    winning = true;
-                }
-                else
-                {
-                    winning = false;
-                    break;
-                }
-            }
-            if (winning)
-                gameManager.win = true;
-        }
     }
 }

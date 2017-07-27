@@ -95,15 +95,13 @@ public class aNode : MonoBehaviour {
     GameManager gameManager;
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
 
         ///Errors and Warnings
         //If the node type is not define, throw an error
         if (nodeType == Type.ET_NULL)
             Debug.LogError(this.gameObject.name + " Does not have a defined nodeType!");
-        //If the node isn't a microphone and there's a defined channel
-        else if (nodeType != Type.ET_MICROPHONE && nodeChannel != Channel.EC_NULL)
-            nodeChannel = Channel.EC_NULL;
 
         //If the node isn't a microphone and there isn't an acceptable type
         if (nodeType != Type.ET_MICROPHONE && acceptableTypes.Length == 0)
@@ -122,16 +120,17 @@ public class aNode : MonoBehaviour {
         counter = 0;
 
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-	}
-	
-	// Update is called once per frame
-	public void Update () {
+    }
+
+    // Update is called once per frame
+    public void Update()
+    {
         //Only execute if this is above 0
         if (outputs.Count > 0)
         {
             ShowConnections();
         }
-        
+
         if (connectionRenderers != null)
         {
             for (int index = 0; index < connectionRenderers.Count; index++)
@@ -145,8 +144,8 @@ public class aNode : MonoBehaviour {
                     tri1.GetComponent<LineShape>().positionB = connectionRenderers[index].GetComponent<LineRenderer>().GetPosition(1);
                 }
             }
-        }            
-	}
+        }
+    }
 
     //When the sprite has been moused over
     public void OnMouseOver()
@@ -158,16 +157,16 @@ public class aNode : MonoBehaviour {
             if (isPowered && !connectionManager.isCarryingSignal)
             {
                 //  Manage picking up the signal
-                if(outputs.Count < maximumOutputs)
+                if (outputs.Count < maximumOutputs)
                 {
-                    print("MaxOut: "+ maximumOutputs);
+                    print("MaxOut: " + maximumOutputs);
                     connectionManager.CarrySignal(this.gameObject);
-                }                    
+                }
             }
         }
         if (Input.GetMouseButtonUp(0))
         {
-            if(connectionManager.isCarryingSignal && connectionManager.inputFrom != this.gameObject)
+            if (connectionManager.isCarryingSignal && connectionManager.inputFrom != this.gameObject)
             {
                 if (!isPowered)
                 {
@@ -192,7 +191,7 @@ public class aNode : MonoBehaviour {
 
     public void ShowConnections()
     {
-        outputs.ForEach((GameObject g)=>Debug.DrawLine(this.gameObject.transform.position, g.transform.position, Color.blue)); 
+        outputs.ForEach((GameObject g) => Debug.DrawLine(this.gameObject.transform.position, g.transform.position, Color.blue));
     }
 
     public void Disconnect()
@@ -211,18 +210,18 @@ public class aNode : MonoBehaviour {
                 outN.isPowered = false;
 
             //Remove the object from the outputs list
-            outputs.Remove(outputs[0]);   
+            outputs.Remove(outputs[0]);
 
             Destroy(connectionRenderers[0]);
             connectionRenderers.Remove(connectionRenderers[0]);
-        }       
+        }
     }
 
     //Checks whether or not a connection can be established
     public bool Check()
     {
         bool ret = false;
-
+        bool ret2 = false;
         //Search through all types
         foreach (Type t in acceptableTypes)
         {
@@ -236,30 +235,31 @@ public class aNode : MonoBehaviour {
 
         //If the node's channel is null, or the nodes channel is the same as mine, return true if not, return false
         if (connectionManager.inputFrom.GetComponent<aNode>().nodeChannel == Channel.EC_NULL)
-            ret = true;
+            ret2 = true;
         else if (connectionManager.inputFrom.GetComponent<aNode>().nodeChannel == nodeChannel)
-            ret = true;
+            ret2 = true;
         else
-            ret = false;
+            ret2 = false;
 
-        return ret;
+        return (ret && ret2);
     }
-    
+
     //Place the signal down on the outputting node
     public void PlaceSignal(GameObject _outputTo)
     {
         if (!outputs.Contains(_outputTo))
         {
             //If this node's channel is null, and the output's node is not null or multiple
-            if(nodeChannel == Channel.EC_NULL && (_outputTo.GetComponent<aNode>().nodeChannel != Channel.EC_NULL || _outputTo.GetComponent<aNode>().nodeChannel != Channel.EC_MULTI))
+            if (nodeChannel == Channel.EC_NULL && (_outputTo.GetComponent<aNode>().nodeChannel != Channel.EC_NULL || _outputTo.GetComponent<aNode>().nodeChannel != Channel.EC_MULTI))
             {
                 nodeChannel = _outputTo.GetComponent<aNode>().nodeChannel;
-            } else
+            }
+            else
                 _outputTo.GetComponent<aNode>().nodeChannel = nodeChannel;
 
             connectionManager.inputFrom = null;
             connectionManager.isCarryingSignal = false;
-            
+
             _outputTo.GetComponent<aNode>().isPowered = true;
             _outputTo.GetComponent<aNode>().inputs.Add(this.gameObject);
             outputs.Add(_outputTo);
