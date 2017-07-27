@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using gameManagement;
 using UnityEngine;
 
 public class aNode : MonoBehaviour {
@@ -88,6 +89,8 @@ public class aNode : MonoBehaviour {
 
     public GameObject signalObjectPrefab;
 
+    GameManager gameManager;
+
     // Use this for initialization
     void Start () {
 
@@ -114,6 +117,8 @@ public class aNode : MonoBehaviour {
             Debug.LogError(this.gameObject.name + " has no designated number of maximum outputs or inputs");
 
         counter = 0;
+
+        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
 	}
 	
 	// Update is called once per frame
@@ -267,6 +272,8 @@ public class aNode : MonoBehaviour {
                 GameObject signal = Instantiate(signalObjectPrefab, _outputTo.transform.position, _outputTo.transform.rotation);
                 signal.GetComponent<SignalFlowObject>().previousNode = this.gameObject;
                 signal.GetComponent<SignalFlowObject>().currentNode = _outputTo;
+
+                gameManager.signalNodes.Add(signal);
             }
         }
     }
