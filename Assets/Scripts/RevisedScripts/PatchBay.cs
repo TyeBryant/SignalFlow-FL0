@@ -15,11 +15,24 @@ public class PatchBay : aNode, IPointerClickHandler {
     float zoomSpeed = 3;
     int pbCounter = 1;
 
+    public int numList;
+
+    //private void Start()
+    //{
+    //    foreach (GameObject node in inputNodes)
+    //        node.SetActive(false);
+    //    foreach (GameObject node in outputNodes)
+    //        node.SetActive(false);
+    //    foreach (GameObject node in settingNodes)
+    //        node.SetActive(false);
+    //}
+
     void IPointerClickHandler.OnPointerClick(PointerEventData eventData) {
         if (eventData.clickCount >= 2 && !zoomed) {
             // Zoom In, show patch bay
             zooming = true;
             zoomed = true;
+            numList = inputNodes.Count;
             foreach (GameObject node in inputNodes)
                 node.SetActive(true);
             foreach (GameObject node in outputNodes)

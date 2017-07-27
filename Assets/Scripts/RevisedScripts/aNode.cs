@@ -76,7 +76,7 @@ public class aNode : MonoBehaviour {
 
     public GameObject lineRenderPrefab;
 
-    [HideInInspector]
+    //[HideInInspector]
     public List<GameObject> inputs = new List<GameObject>(), outputs = new List<GameObject>();
 
     [HideInInspector]
