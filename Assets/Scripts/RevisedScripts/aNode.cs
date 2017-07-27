@@ -43,6 +43,9 @@ public class aNode : MonoBehaviour {
         ET_MIXBMAINMIX,
         ET_MIXBTOMAINMIX,
         ET_MAINMIX,
+		ET_LOCAL,
+		ET_REVERB
+		ET_COMPRESSION,
         ET_DEAD
     }
 
@@ -122,7 +125,7 @@ public class aNode : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	public void Update () {
         //Only execute if this is above 0
         if (outputs.Count > 0)
         {
