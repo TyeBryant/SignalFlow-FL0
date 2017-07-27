@@ -2,21 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace nodeFunctionality
+public class SubDAW : MonoBehaviour
 {
-    public class SubDAW : DAW
+    //[HideInInspector]
+    public int selectedIndex;
+
+    [HideInInspector]
+    public aDAW hubDaw;
+
+    void OnMouseOver()
     {
-
-        // Use this for initialization
-        void Start()
+        if (Input.GetMouseButtonUp(0))
         {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
+            hubDaw.selectedIndex = selectedIndex;
         }
     }
 }
