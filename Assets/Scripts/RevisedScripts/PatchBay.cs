@@ -46,9 +46,12 @@ public class PatchBay : aNode, IPointerClickHandler {
                 inputNodes[i].SetActive(true);
                 outputNodes[i].SetActive(true);
 
+                inputNodes[i].GetComponent<aNode>().inputs.Add(inputs[i]);
+
                 foreach (GameObject nodes in inputNodes)
                 {
                     nodes.GetComponent<aNode>().maximumInputs = 1;
+                    nodes.GetComponent<aNode>().maximumOutputs = 1;
                 }
             }
 
