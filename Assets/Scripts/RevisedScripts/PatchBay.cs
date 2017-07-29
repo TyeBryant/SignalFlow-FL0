@@ -13,9 +13,7 @@ public class PatchBay : aNode, IPointerClickHandler {
 
     bool zoomed, zooming;
     float zoomSpeed = 3;
-    int pbCounter = 1;
-
-    public int numList;
+    public int pbCounter;
 
     private void Start()
     {
@@ -32,11 +30,8 @@ public class PatchBay : aNode, IPointerClickHandler {
             // Zoom In, show patch bay
             zooming = true;
             zoomed = true;
-            numList = inputNodes.Count;
             //foreach (GameObject node in inputNodes)
-            //{
             //    node.SetActive(true);
-            //}   
             //foreach (GameObject node in outputNodes)
             //    node.SetActive(true);
             foreach (GameObject node in settingNodes)
@@ -63,12 +58,20 @@ public class PatchBay : aNode, IPointerClickHandler {
                 foreach (GameObject node in outputNodes)
                     node.SetActive(false);
             else
-                //foreach (GameObject node in outputNodes) {
-                //    node.SetActive(true);
-                for (int i = 0; i <= inputs.Count - 1; i++)
+            //foreach (GameObject node in outputNodes) {
+            //    node.SetActive(true);
+            {
+                pbCounter++;
+                foreach (GameObject node in inputNodes)
+                    node.SetActive(false);
+                activeInNodes.Clear();
+                for (int i = 0; i < pbCounter-1; ++i)
                 {
-                    outputNodes[i].SetActive(true);
+                    activeInNodes.Add(inputNodes[i]);
+                    inputNodes[i].SetActive(true);
+                    SetPositions(0.75f);
                 }
+            }
 
         }
         
@@ -107,17 +110,30 @@ public class PatchBay : aNode, IPointerClickHandler {
                 node.SetActive(false);
         }
 
-        //if (Input.GetKeyDown(KeyCode.Space)) {
+        //Dismiss the middle ground if there is no input
+        if(inputs.Count == 0)
+        {
+            foreach (GameObject node in settingNodes)
+                node.SetActive(false);
+        }
+
+        //original code for spawning the node outside the patch bay
+
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
         //    pbCounter++;
         //    foreach (GameObject node in inputNodes)
         //        node.SetActive(false);
         //    activeInNodes.Clear();
-        //    for (int i = 0; i < pbCounter; ++i) {
+        //    for (int i = 0; i < pbCounter; ++i)
+        //    {
         //        activeInNodes.Add(inputNodes[i]);
         //        inputNodes[i].SetActive(true);
         //        SetPositions(0.75f);
         //    }
         //}
+
+        pbCounter = inputs.Count;
 
     }
 
