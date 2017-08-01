@@ -212,7 +212,7 @@ public class aNode : MonoBehaviour {
             //Remove the object from the outputs list
             outputs.Remove(outputs[0]);
 
-            Destroy(connectionRenderers[0]);
+            //Destroy(connectionRenderers[0]);
             connectionRenderers.Remove(connectionRenderers[0]);
         }
     }
@@ -264,7 +264,10 @@ public class aNode : MonoBehaviour {
             _outputTo.GetComponent<aNode>().inputs.Add(this.gameObject);
             outputs.Add(_outputTo);
 
-            GameObject lineRendObj = Instantiate(lineRenderPrefab);
+            GameObject lineRendObj = Instantiate(lineRenderPrefab, transform.position, Quaternion.identity);
+            lineRendObj.GetComponent<LineRendCol>().startPoint = transform.position;
+            lineRendObj.GetComponent<LineRendCol>().endPoint = _outputTo.transform.position;
+            lineRendObj.GetComponent<LineRendCol>().node = this.GetComponent<aNode>();
             connectionRenderers.Add(lineRendObj);
 
             LineRenderer lineRend = lineRendObj.GetComponent<LineRenderer>();
