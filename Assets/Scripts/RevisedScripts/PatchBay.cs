@@ -7,10 +7,14 @@ public class PatchBay : aNode, IPointerClickHandler {
     public List<GameObject> inputNodes = new List<GameObject>();
     public List<GameObject> outputNodes = new List<GameObject>();
     public List<GameObject> settingNodes = new List<GameObject>();
-    List<Vector3> inputNodePos = new List<Vector3>();
+    public List<GameObject> subNodes = new List<GameObject>(); // Used for selecting signal
+    public List<Vector3> inputNodePos = new List<Vector3>();
+    public List<GameObject> signalObjs = new List<GameObject>();
 
     List<GameObject> activeInNodes = new List<GameObject>();
     List<GameObject> activeOuNodes = new List<GameObject>();
+
+    public int selectedIndex;
 
     public bool zoomed, zooming;
     float zoomSpeed = 3;
@@ -24,6 +28,7 @@ public class PatchBay : aNode, IPointerClickHandler {
             outputNodes[index].SetActive(false);
             settingNodes[index].SetActive(false);
             inputNodePos.Add(inputNodes[index].transform.position);
+            subNodes[index].SetActive(false);
         }
     }
 
@@ -75,11 +80,12 @@ public class PatchBay : aNode, IPointerClickHandler {
                 pbCounter++;
                 foreach (GameObject node in inputNodes)
                     node.SetActive(false);
+                foreach (GameObject node in subNodes)
+                    node.SetActive(false);
                 activeInNodes.Clear();
                 for (int i = 0; i < pbCounter-1; ++i)
                 {
-                    activeInNodes.Add(inputNodes[i]);
-                    inputNodes[i].SetActive(true);
+                    subNodes[i].SetActive(true);
                     SetPositions(0.75f);
                 }
             }
@@ -89,8 +95,34 @@ public class PatchBay : aNode, IPointerClickHandler {
         
     }
 
+    public override void OnMouseOver() {
+        base.OnMouseOver();
+
+        for (int i = 0; i < inputs.Count; ++i) {
+            subNodes[i].GetComponent<subPB>().pb = this;
+            subNodes[i].GetComponent<subPB>().selectedIndex = i;
+        }
+
+    }
+
     new void Update() {
-        base.Update();
+
+        if (outputs.Count > 0)
+            ShowConnections();
+
+        if (connectionRenderers != null) {
+            for (int index = 0; index < connectionRenderers.Count; ++index) {
+                counter += Time.deltaTime;
+                if (counter > 0.5f && signalObjs.Count > 0) {
+                    counter = 0;
+
+                    signalObject = signalObjs[index];
+                    GameObject tri1 = Instantiate(signalObject, this.gameObject.transform.position, Quaternion.identity);
+                    tri1.GetComponent<LineShape>().positionA = connectionRenderers[index].GetComponent<LineRenderer>().GetPosition(0);
+                    tri1.GetComponent<LineShape>().positionB = connectionRenderers[index].GetComponent<LineRenderer>().GetPosition(1);
+                }
+            }
+        }
 
         if (zooming && zoomed) {
             Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, new Vector3(transform.position.x, transform.position.y, Camera.main.transform.position.z), Time.deltaTime * zoomSpeed);
@@ -121,6 +153,8 @@ public class PatchBay : aNode, IPointerClickHandler {
                 node.SetActive(false);
         }
 
+
+
         ////Dismiss the middle ground if there is no input
         //if(inputs.Count == 0)
         //{
@@ -150,52 +184,58 @@ public class PatchBay : aNode, IPointerClickHandler {
 
     public override void PlaceSignal(GameObject _outputTo) 
     {
-        if (!outputs.Contains(_outputTo)) {
-            //If this node's channel is null, and the output's node is not null or multiple
-            if (nodeChannel == Channel.EC_NULL && (_outputTo.GetComponent<aNode>().nodeChannel != Channel.EC_NULL || _outputTo.GetComponent<aNode>().nodeChannel != Channel.EC_MULTI)) {
-                nodeChannel = _outputTo.GetComponent<aNode>().nodeChannel;
-            }
-            else
-                _outputTo.GetComponent<aNode>().nodeChannel = nodeChannel;
+        //if (!outputs.Contains(_outputTo)) {
+        //    //If this node's channel is null, and the output's node is not null or multiple
+        //    if (nodeChannel == Channel.EC_NULL && (_outputTo.GetComponent<aNode>().nodeChannel != Channel.EC_NULL || _outputTo.GetComponent<aNode>().nodeChannel != Channel.EC_MULTI)) {
+        //        nodeChannel = _outputTo.GetComponent<aNode>().nodeChannel;
+        //    }
+        //    else
+        //        _outputTo.GetComponent<aNode>().nodeChannel = nodeChannel;
 
-            connectionManager.inputFrom = null;
-            connectionManager.isCarryingSignal = false;
+        //    connectionManager.inputFrom = null;
+        //    connectionManager.isCarryingSignal = false;
 
-            _outputTo.GetComponent<aNode>().isPowered = true;
-            _outputTo.GetComponent<aNode>().inputs.Add(this.gameObject);
-            outputs.Add(_outputTo);
+        //    _outputTo.GetComponent<aNode>().isPowered = true;
+        //    _outputTo.GetComponent<aNode>().inputs.Add(this.gameObject);
+        //    outputs.Add(_outputTo);
 
-            GameObject lineRendObj = Instantiate(lineRenderPrefab);
-            connectionRenderers.Add(lineRendObj);
+        //    GameObject lineRendObj = Instantiate(lineRenderPrefab);
+        //    connectionRenderers.Add(lineRendObj);
 
-            LineRenderer lineRend = lineRendObj.GetComponent<LineRenderer>();
+        //    LineRenderer lineRend = lineRendObj.GetComponent<LineRenderer>();
 
-            Vector3 startPos = transform.position;
-            startPos.z = 0;
+        //    Vector3 startPos = transform.position;
+        //    startPos.z = 0;
 
-            Vector3 endPos = _outputTo.transform.position;
-            endPos.z = 0;
+        //    Vector3 endPos = _outputTo.transform.position;
+        //    endPos.z = 0;
 
-            lineRend.SetPositions(new Vector3[] { startPos, endPos });
+        //    lineRend.SetPositions(new Vector3[] { startPos, endPos });
 
-            if (outputs.Count > 1) {
-                GameObject signal = Instantiate(signalFlowHolder, _outputTo.transform.position, _outputTo.transform.rotation);
-                signal.GetComponent<SignalFlowObject>().previousNode = this.gameObject;
-                signal.GetComponent<SignalFlowObject>().currentNode = _outputTo;
+        //    if (outputs.Count > 1) {
+        //        GameObject signal = Instantiate(signalFlowHolder, _outputTo.transform.position, _outputTo.transform.rotation);
+        //        signal.GetComponent<SignalFlowObject>().previousNode = this.gameObject;
+        //        signal.GetComponent<SignalFlowObject>().currentNode = _outputTo;
 
-                gameManager.signalNodes.Add(signal);
+        //        gameManager.signalNodes.Add(signal);
 
-                signal.GetComponent<SignalFlowObject>().signalFlowObjectType = this.gameObject.GetComponent<aNode>().signalObject;
-                _outputTo.GetComponent<aNode>().signalObject = signal.GetComponent<SignalFlowObject>().signalFlowObjectType;
-            }
-        }
+        //        signal.GetComponent<SignalFlowObject>().signalFlowObjectType = this.gameObject.GetComponent<aNode>().signalObject;
+        //        _outputTo.GetComponent<aNode>().signalObject = signal.GetComponent<SignalFlowObject>().signalFlowObjectType;
+        //    }
+        //}
+        signalObjs.Add(inputs[selectedIndex].GetComponent<aNode>().signalObject);
+        base.PlaceSignal(_outputTo);
     }
 
     void SetPositions(float distance = 0.75f, bool type = false) {
+        List<GameObject> activeSubNodes = new List<GameObject>();
+        foreach (GameObject node in subNodes)
+            if (node.activeSelf)
+                activeSubNodes.Add(node);
 
         float range = 180;
-        float interval = range / (activeInNodes.Count + 1);
-        for (int i = 0; i < activeInNodes.Count; ++i) {
+        float interval = range / (activeSubNodes.Count + 1);
+        for (int i = 0; i < activeSubNodes.Count; ++i) {
             float position;
             position = i * interval + interval;
             if (position < 270)
@@ -203,13 +243,13 @@ public class PatchBay : aNode, IPointerClickHandler {
             else
                 position -= 90;
             Vector3 newPos = new Vector3((Mathf.Sin(position * Mathf.Deg2Rad)) * distance, (Mathf.Cos(position * Mathf.Deg2Rad)) * distance, 2);
-            activeInNodes[i].transform.localPosition = newPos;
+            activeSubNodes[i].transform.localPosition = newPos;
             if (type) {
                 activeOuNodes[i].transform.localPosition = new Vector3(newPos.x, -newPos.y, newPos.z);
                 activeOuNodes[i].SetActive(true);
             }
 
-            activeInNodes[i].SetActive(true);
+            activeSubNodes[i].SetActive(true);
         }
     }
 }
