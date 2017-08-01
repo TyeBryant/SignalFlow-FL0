@@ -14,6 +14,7 @@ public class aConnectionManager : MonoBehaviour
     Vector3 mousePosition = new Vector3(0, 0, 0);
 
     public GameObject lineRenderPrefab;
+    public GameObject pbLineRenderPrefab;
     public GameObject lineRendObj;
     LineRenderer lineRend;
 
@@ -37,12 +38,19 @@ public class aConnectionManager : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0) && lineRend == null)
             {
-                lineRendObj = Instantiate(lineRenderPrefab);
+                bool zoomed = false;
+                foreach (GameObject obj in GameObject.FindGameObjectsWithTag("PatchBay"))
+                    if (obj.GetComponent<PatchBay>().zoomed) {
+                        lineRendObj = Instantiate(pbLineRenderPrefab);
+                        zoomed = true;
+                    }
+                if(!zoomed)
+                    lineRendObj = Instantiate(lineRenderPrefab);
                 lineRend = lineRendObj.GetComponent<LineRenderer>();
                 lineRend.SetPosition(0, inputFrom.transform.position);
             }
             else if (Input.GetMouseButtonDown(0) && lineRend != null)
-                isCarryingSignal = false;
+                isCarryingSignal = true;
 
             lineRend.SetPosition(1, mousePointer.transform.position);
 

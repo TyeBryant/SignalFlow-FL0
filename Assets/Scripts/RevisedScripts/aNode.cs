@@ -88,14 +88,14 @@ public class aNode : MonoBehaviour {
     public float counter;
 
     [HideInInspector]
-    aConnectionManager connectionManager;
+    public aConnectionManager connectionManager;
 
-    public GameObject signalObjectPrefab;
+    public GameObject signalFlowHolder;
 
-    GameManager gameManager;
+    public GameManager gameManager;
 
     // Use this for initialization
-    void Start()
+    public void Start()
     {
 
         ///Errors and Warnings
@@ -148,7 +148,7 @@ public class aNode : MonoBehaviour {
     }
 
     //When the sprite has been moused over
-    public void OnMouseOver()
+    public virtual void OnMouseOver()
     {
         //When the player clicks
         if (Input.GetMouseButtonDown(0))
@@ -245,7 +245,7 @@ public class aNode : MonoBehaviour {
     }
 
     //Place the signal down on the outputting node
-    public void PlaceSignal(GameObject _outputTo)
+    public virtual void PlaceSignal(GameObject _outputTo)
     {
         if (!outputs.Contains(_outputTo))
         {
@@ -268,15 +268,19 @@ public class aNode : MonoBehaviour {
             connectionRenderers.Add(lineRendObj);
 
             LineRenderer lineRend = lineRendObj.GetComponent<LineRenderer>();
+
             lineRend.SetPositions(new Vector3[] { transform.position, _outputTo.transform.position });
 
             if (outputs.Count > 1)
             {
-                GameObject signal = Instantiate(signalObjectPrefab, _outputTo.transform.position, _outputTo.transform.rotation);
+                GameObject signal = Instantiate(signalFlowHolder, _outputTo.transform.position, _outputTo.transform.rotation);
                 signal.GetComponent<SignalFlowObject>().previousNode = this.gameObject;
                 signal.GetComponent<SignalFlowObject>().currentNode = _outputTo;
 
                 gameManager.signalNodes.Add(signal);
+
+                signal.GetComponent<SignalFlowObject>().signalFlowObjectType = this.gameObject.GetComponent<aNode>().signalObject;
+                _outputTo.GetComponent<aNode>().signalObject = signal.GetComponent<SignalFlowObject>().signalFlowObjectType;
             }
         }
     }

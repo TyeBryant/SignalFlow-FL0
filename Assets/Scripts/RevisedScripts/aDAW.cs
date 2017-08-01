@@ -10,7 +10,7 @@ public class aDAW : aNode {
     //[HideInInspector]
     public List<GameObject> signalObjs = new List<GameObject>();
 
-    [HideInInspector]
+    //[HideInInspector]
     public List<GameObject> subDaws = new List<GameObject>();
     public List<GameObject> cubeInputs = new List<GameObject>();
 
@@ -31,7 +31,7 @@ public class aDAW : aNode {
             for (int index = 0; index < connectionRenderers.Count; index++)
             {
                 counter += Time.deltaTime;
-                if (counter > 0.5f)
+                if (counter > 0.5f && signalObjs.Count > 0)
                 {
                     counter = 0;
 
@@ -44,7 +44,7 @@ public class aDAW : aNode {
         }
     }
 
-    new void OnMouseOver()
+    public override void OnMouseOver()
     {
         base.OnMouseOver();
         if (Input.GetMouseButtonUp(0))
@@ -84,9 +84,9 @@ public class aDAW : aNode {
         }
     }
 
-    void PlaceSignal(GameObject _outputTo)
+    public override void PlaceSignal(GameObject _outputTo)
     {
-        base.PlaceSignal(_outputTo);
         signalObjs.Add(inputs[selectedIndex].GetComponent<aNode>().signalObject);
+        base.PlaceSignal(_outputTo);
     }
 }

@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class SignalFlowObject : MonoBehaviour
 {
-    [HideInInspector]
+    //[HideInInspector]
     public GameObject currentNode;
 
-    [HideInInspector]
+    //[HideInInspector]
     public GameObject previousNode;
 
     public Transform nodePoweredTransform;
@@ -81,6 +81,18 @@ public class SignalFlowObject : MonoBehaviour
         }
 
         //Setting the material of the signal
-        currentNode.GetComponent<aNode>().signalObject = this.GetComponent<SignalFlowHolder>().signalFlowObjectType;
+        currentNode.GetComponent<aNode>().signalObject = signalFlowObjectType;
+
+        if (signalFlowObjectType == null) 
+        {
+            if (previousNode == null) 
+            {
+                signalFlowObjectType = currentNode.GetComponent<aNode>().signalObject;
+            }
+            else 
+            {
+                signalFlowObjectType = previousNode.GetComponent<aNode>().signalObject;
+            }
+        }
     }
 }
