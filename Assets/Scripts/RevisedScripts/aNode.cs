@@ -269,7 +269,10 @@ public class aNode : MonoBehaviour {
 
             LineRenderer lineRend = lineRendObj.GetComponent<LineRenderer>();
 
-            lineRend.SetPositions(new Vector3[] { transform.position, _outputTo.transform.position });
+            if (lineRendObj.name == "PB_LineRendererPrefab" || lineRendObj.name == "PB_LineRendererPrefab(Clone)")
+                lineRend.SetPositions(new Vector3[] { new Vector3(transform.position.x, transform.position.y, 0), new Vector3(_outputTo.transform.position.x, _outputTo.transform.position.y, 0) });
+            else
+                lineRend.SetPositions(new Vector3[] { transform.position, _outputTo.transform.position });
 
             if (outputs.Count > 1)
             {
