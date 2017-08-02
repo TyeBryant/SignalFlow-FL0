@@ -12,9 +12,9 @@ namespace gameManagement
 
         public List<aNode.Type> banList;
 
-        [HideInInspector]
+        //[HideInInspector]
         public List<aNode.Type> previousNodeListTypes;
-        [HideInInspector]
+        //[HideInInspector]
         public List<GameObject> previousNodeList;
         [HideInInspector]
         public List<GameObject> signalNodes;
