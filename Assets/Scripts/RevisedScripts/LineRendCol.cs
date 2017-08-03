@@ -11,15 +11,18 @@ public class LineRendCol : MonoBehaviour
     public LineRenderer lineRend;
 
     public aNode node;
-
+    public GameObject outNode;
     private bool isDragging = false;
 
     private PolygonCollider2D polyCol2D;
+
+    aConnectionManager conMan;
 
     // Use this for initialization
     void Start()
     {
         polyCol2D = gameObject.AddComponent<PolygonCollider2D>();
+        conMan = FindObjectOfType<aConnectionManager>();
     }
 
     // Update is called once per frame
@@ -33,7 +36,7 @@ public class LineRendCol : MonoBehaviour
 
         if (isDragging)
         {
-            endPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            endPoint = conMan.mousePointer.transform.position;
             lineRend.SetPosition(1, endPoint);
         }
     }
@@ -43,9 +46,22 @@ public class LineRendCol : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             isDragging = true;
-            node.Disconnect();
-        }
-        else if (Input.GetMouseButtonDown(1))
+            Disconnect();
+
+            conMan.CarrySignal(node.gameObject);
             Destroy(this.gameObject);
+        }
+    }
+    
+    //Manage Disconnecting
+    void Disconnect()
+    {
+        node.outputs.Remove(outNode);
+
+        //Make sure s is not powered anymore
+        aNode s = outNode.GetComponent<aNode>();
+        s.inputs.Remove(node.gameObject);
+        if(s.inputs.Count == 0)
+            s.isPowered = false;
     }
 }

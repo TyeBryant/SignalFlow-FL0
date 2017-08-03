@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using gameManagement;
 using UnityEngine;
 
-public class aNode : MonoBehaviour {
+public class aNode : MonoBehaviour
+{
 
     /// <summary>
     /// This is a new Node script is intended to be a parent script
@@ -43,9 +44,9 @@ public class aNode : MonoBehaviour {
         ET_MIXBMAINMIX,
         ET_MIXBTOMAINMIX,
         ET_MAINMIX,
-		ET_LOCAL,
-		ET_REVERB,
-		ET_COMPRESSION,
+        ET_LOCAL,
+        ET_REVERB,
+        ET_COMPRESSION,
         ET_DEAD
     }
 
@@ -164,6 +165,8 @@ public class aNode : MonoBehaviour {
                 }
             }
         }
+
+        //Used for placing the signal exclusively
         if (Input.GetMouseButtonUp(0))
         {
             if (connectionManager.isCarryingSignal && connectionManager.inputFrom != this.gameObject)
@@ -179,11 +182,6 @@ public class aNode : MonoBehaviour {
                     //If check returns true and I can still accept inputs
                     if (Check() && inputs.Count < maximumInputs)
                         connectionManager.inputFrom.GetComponent<aNode>().PlaceSignal(this.gameObject);
-                    else
-                    {
-                        Disconnect();
-                        connectionManager.inputFrom.GetComponent<aNode>().PlaceSignal(this.gameObject);
-                    }
                 }
             }
         }
@@ -194,9 +192,11 @@ public class aNode : MonoBehaviour {
         outputs.ForEach((GameObject g) => Debug.DrawLine(this.gameObject.transform.position, g.transform.position, Color.blue));
     }
 
-    public void Disconnect()
+    public void Disconnect(GameObject outObj)
     {
-        //For all object's getting a signal from me
+
+
+        /*//For all object's getting a signal from me
         int tempCount = outputs.Count;
         for (int i = 0; i < tempCount; ++i)
         {
@@ -204,7 +204,7 @@ public class aNode : MonoBehaviour {
 
             //Remove this node from it's input list
             outN.inputs.Remove(this.gameObject);
-
+            print(outN.inputs.Count);
             //If there is no more inputs from anything,this node is no longer powered
             if (outN.inputs.Count == 0)
                 outN.isPowered = false;
@@ -214,7 +214,7 @@ public class aNode : MonoBehaviour {
 
             //Destroy(connectionRenderers[0]);
             connectionRenderers.Remove(connectionRenderers[0]);
-        }
+        }*/
     }
 
     //Checks whether or not a connection can be established
@@ -267,6 +267,7 @@ public class aNode : MonoBehaviour {
             GameObject lineRendObj = Instantiate(lineRenderPrefab, transform.position, Quaternion.identity);
             lineRendObj.GetComponent<LineRendCol>().startPoint = transform.position;
             lineRendObj.GetComponent<LineRendCol>().endPoint = _outputTo.transform.position;
+            lineRendObj.GetComponent<LineRendCol>().outNode = _outputTo;
             lineRendObj.GetComponent<LineRendCol>().node = this.GetComponent<aNode>();
             connectionRenderers.Add(lineRendObj);
 
