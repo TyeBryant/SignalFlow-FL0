@@ -18,6 +18,7 @@ public class AudioChannel {
 }
 
 public class AudioManager : MonoBehaviour {
+    public AudioClip defClip;
 
     // Singleton
     public static AudioManager _Instance;
@@ -45,8 +46,10 @@ public class AudioManager : MonoBehaviour {
     }
 
     public void PlayClip(AudioClip clip, AudioChannel channel, float volume = 1, bool loop = false) {
-        AudioSource source = new AudioSource();
+        gameObject.AddComponent<AudioSource>();
+        AudioSource source = GetComponent<AudioSource>(); 
         channel.Add(source);
+        Debug.Log(channel.name +  clip.name + source.name);
         source.clip = clip;
         source.loop = loop;
         source.volume = masterVolume * volume * channel.volume;

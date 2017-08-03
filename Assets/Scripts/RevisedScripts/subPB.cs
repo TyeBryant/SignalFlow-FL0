@@ -5,7 +5,7 @@ using UnityEngine;
 public class subPB : MonoBehaviour {
 
     public int selectedIndex;
-    public PatchBay pb;
+    public aPatchBay pb;
 
     void OnMouseOver() {
         if (Input.GetMouseButtonUp(0))

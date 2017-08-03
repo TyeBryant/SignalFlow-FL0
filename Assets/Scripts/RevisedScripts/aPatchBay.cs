@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class PatchBay : aNode, IPointerClickHandler {
+public class aPatchBay : aNode, IPointerClickHandler {
     public List<GameObject> inputNodes = new List<GameObject>();
     public List<GameObject> outputNodes = new List<GameObject>();
     public List<GameObject> settingNodes = new List<GameObject>();
 
     public GameObject subNodeObject;
     public float nodeRadiusSpacing;
+
     //This shouldn't really be set beforehand
     public List<GameObject> subNodes = new List<GameObject>(); // Used for selecting signal
     //Signal things
@@ -34,8 +35,8 @@ public class PatchBay : aNode, IPointerClickHandler {
             inputNodes[index].SetActive(false);
             outputNodes[index].SetActive(false);
             settingNodes[index].SetActive(false);
-            inputNodePos.Add(inputNodes[index].transform.position);
-            subNodes[index].SetActive(false);
+            //inputNodePos.Add(inputNodes[index].transform.position);
+            //subNodes[index].SetActive(false);
         }
     }
 
@@ -53,26 +54,6 @@ public class PatchBay : aNode, IPointerClickHandler {
                 settingNodes[index].SetActive(true);
             }
 
-            //foreach (GameObject node in inputNodes)
-            //    node.SetActive(true);
-            //foreach (GameObject node in outputNodes)
-            //    node.SetActive(true);
-            //foreach (GameObject node in settingNodes)
-            //    node.SetActive(true);
-            //for (int i = 0; i <= inputs.Count - 1; i++)
-            //{
-            //    inputNodes[i].SetActive(true);
-            //    outputNodes[i].SetActive(true);
-
-            //    inputNodes[i].GetComponent<aNode>().inputs.Add(inputs[i]);
-
-            //    //foreach (GameObject nodes in inputNodes)
-            //    //{
-            //    //    nodes.GetComponent<aNode>().maximumInputs = 1;
-            //    //    nodes.GetComponent<aNode>().maximumOutputs = 1;
-            //    //}
-            //}
-
             GetComponent<CircleCollider2D>().enabled = false;
         }
         else if (eventData.clickCount < 2 && !zoomed) {
@@ -81,20 +62,23 @@ public class PatchBay : aNode, IPointerClickHandler {
                 foreach (GameObject node in outputNodes)
                     node.SetActive(false);
             else
-            //foreach (GameObject node in outputNodes) {
-            //    node.SetActive(true);
             {
                 pbCounter++;
                 foreach (GameObject node in inputNodes)
                     node.SetActive(false);
-                foreach (GameObject node in subNodes)
-                    node.SetActive(false);
+                //foreach (GameObject node in subNodes)
+                //    Destroy(node);
+                //subNodes.Clear();
                 activeInNodes.Clear();
-                for (int i = 0; i < pbCounter-1; ++i)
-                {
-                    subNodes[i].SetActive(true);
-                    SetPositions(0.75f);
-                }
+                //for (int i = 0; i < inputs.Count; ++i)
+                //{
+                    
+                //    Vector3 spawnPos = (inputs[i].transform.position - transform.position).normalized * nodeRadiusSpacing;
+                //    GameObject obj = Instantiate(subNodeObject, spawnPos, Quaternion.identity);
+                //    obj.GetComponent<subPB>().pb = this;
+                //    obj.GetComponent<subPB>().selectedIndex = i;
+                //    subNodes.Add(obj);
+                //}
             }
 
         }
@@ -105,9 +89,18 @@ public class PatchBay : aNode, IPointerClickHandler {
     public override void OnMouseOver() {
         base.OnMouseOver();
 
-        for (int i = 0; i < inputs.Count; ++i) {
-            subNodes[i].GetComponent<subPB>().pb = this;
-            subNodes[i].GetComponent<subPB>().selectedIndex = i;
+        if (Input.GetMouseButtonUp(0)) {
+            Debug.Log("Done a thing from OnMouseOver");
+            foreach (GameObject obj in subNodes)
+                Destroy(obj);
+            subNodes.Clear();
+            for (int i = 0; i < inputs.Count; ++i) {
+                Vector3 spawnPos = (inputs[i].transform.position - transform.position).normalized * nodeRadiusSpacing;
+                GameObject obj = Instantiate(subNodeObject, spawnPos, Quaternion.identity);
+                obj.GetComponent<subPB>().pb = this;
+                obj.GetComponent<subPB>().selectedIndex = i;
+                subNodes.Add(obj);
+            }
         }
 
     }
@@ -160,76 +153,13 @@ public class PatchBay : aNode, IPointerClickHandler {
                 node.SetActive(false);
         }
 
-
-
-        ////Dismiss the middle ground if there is no input
-        //if(inputs.Count == 0)
-        //{
-        //    foreach (GameObject node in settingNodes)
-        //        node.SetActive(false);
-        //}
-
-        //original code for spawning the node outside the patch bay
-
-        //if (Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    pbCounter++;
-        //    foreach (GameObject node in inputNodes)
-        //        node.SetActive(false);
-        //    activeInNodes.Clear();
-        //    for (int i = 0; i < pbCounter; ++i)
-        //    {
-        //        activeInNodes.Add(inputNodes[i]);
-        //        inputNodes[i].SetActive(true);
-        //        SetPositions(0.75f);
-        //    }
-        //}
-
         pbCounter = inputs.Count;
 
     }
 
     public override void PlaceSignal(GameObject _outputTo) 
     {
-        //if (!outputs.Contains(_outputTo)) {
-        //    //If this node's channel is null, and the output's node is not null or multiple
-        //    if (nodeChannel == Channel.EC_NULL && (_outputTo.GetComponent<aNode>().nodeChannel != Channel.EC_NULL || _outputTo.GetComponent<aNode>().nodeChannel != Channel.EC_MULTI)) {
-        //        nodeChannel = _outputTo.GetComponent<aNode>().nodeChannel;
-        //    }
-        //    else
-        //        _outputTo.GetComponent<aNode>().nodeChannel = nodeChannel;
-
-        //    connectionManager.inputFrom = null;
-        //    connectionManager.isCarryingSignal = false;
-
-        //    _outputTo.GetComponent<aNode>().isPowered = true;
-        //    _outputTo.GetComponent<aNode>().inputs.Add(this.gameObject);
-        //    outputs.Add(_outputTo);
-
-        //    GameObject lineRendObj = Instantiate(lineRenderPrefab);
-        //    connectionRenderers.Add(lineRendObj);
-
-        //    LineRenderer lineRend = lineRendObj.GetComponent<LineRenderer>();
-
-        //    Vector3 startPos = transform.position;
-        //    startPos.z = 0;
-
-        //    Vector3 endPos = _outputTo.transform.position;
-        //    endPos.z = 0;
-
-        //    lineRend.SetPositions(new Vector3[] { startPos, endPos });
-
-        //    if (outputs.Count > 1) {
-        //        GameObject signal = Instantiate(signalFlowHolder, _outputTo.transform.position, _outputTo.transform.rotation);
-        //        signal.GetComponent<SignalFlowObject>().previousNode = this.gameObject;
-        //        signal.GetComponent<SignalFlowObject>().currentNode = _outputTo;
-
-        //        gameManager.signalNodes.Add(signal);
-
-        //        signal.GetComponent<SignalFlowObject>().signalFlowObjectType = this.gameObject.GetComponent<aNode>().signalObject;
-        //        _outputTo.GetComponent<aNode>().signalObject = signal.GetComponent<SignalFlowObject>().signalFlowObjectType;
-        //    }
-        //}
+        Debug.Log("Done a thing from placesignal");
         signalObjs.Add(inputs[selectedIndex].GetComponent<aNode>().signalObject);
         base.PlaceSignal(_outputTo);
     }
