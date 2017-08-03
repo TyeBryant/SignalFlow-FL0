@@ -86,7 +86,8 @@ public class aDAW : aNode {
 
     public override void PlaceSignal(GameObject _outputTo)
     {
-        signalObjs.Add(inputs[selectedIndex].GetComponent<aNode>().signalObject);
+        if (inputs.Count > 0)
+            signalObjs.Add(inputs[selectedIndex].GetComponent<aNode>().signalObject);
         base.PlaceSignal(_outputTo);
     }
 }

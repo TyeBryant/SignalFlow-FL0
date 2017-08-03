@@ -155,7 +155,7 @@ public class aNode : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             //if this node is powered and the connection manager is carrying a signal
-            if (isPowered && !connectionManager.isCarryingSignal)
+            if (!connectionManager.isCarryingSignal)
             {
                 //  Manage picking up the signal
                 if (outputs.Count < maximumOutputs)

@@ -57,11 +57,26 @@ public class LineRendCol : MonoBehaviour
     void Disconnect()
     {
         node.outputs.Remove(outNode);
-
-        //Make sure s is not powered anymore
         aNode s = outNode.GetComponent<aNode>();
-        s.inputs.Remove(node.gameObject);
-        if(s.inputs.Count == 0)
-            s.isPowered = false;
+        if (!s.GetComponent<aDAW>())
+        {
+            //Make sure s is not powered anymore            
+            s.inputs.Remove(node.gameObject);
+            if (s.inputs.Count == 0)
+                s.isPowered = false;
+        }
+        else
+        {
+            while (s.GetComponent<aDAW>().signalObjs.Contains(node.signalObject))
+            {
+                s.connectionRenderers.RemoveAt(s.GetComponent<aDAW>().signalObjs.IndexOf(node.signalObject));
+                s.GetComponent<aDAW>().signalObjs.Remove(node.signalObject);
+            }
+            //Make sure s is not powered anymore            
+            s.inputs.Remove(node.gameObject);
+            if (s.inputs.Count == 0)
+                s.isPowered = false;
+        }
+
     }
 }
