@@ -5,12 +5,15 @@ using UnityEngine;
 
 public class SignalFlowObject : MonoBehaviour
 {
-    [HideInInspector]
+    //The current node that the signal is on
+    //[HideInInspector]
     public GameObject currentNode;
 
-    [HideInInspector]
+    //The node that the signal came from
+    //[HideInInspector]
     public GameObject previousNode;
 
+    //The movement that the signal has to perform to get on the current node
     public Transform nodePoweredTransform;
 
     [HideInInspector]
@@ -20,13 +23,20 @@ public class SignalFlowObject : MonoBehaviour
 
     public GameManager gameManager;
 
+    //Bools to check if they are on multi-input/output nodes
     public bool onDaw;
+    public bool dawReady;
+
     public bool onPatchBay;
+    public bool patchBayReady;
 
     public int dawInt;
     public int patchBayInt;
 
     public int outputCount;
+    public int genericInt;
+
+    public bool countCheck;
 
     // Use this for initialization
     void Start()
@@ -35,177 +45,167 @@ public class SignalFlowObject : MonoBehaviour
 
         onDaw = false;
         onPatchBay = false;
+        countCheck = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //if (currentNode.GetComponent<aNode>().outputs == null)
-        //{
-        //    return;
-        //}
-
-        if (previousNodeList == null)
+        //Checking if the current node is a DAW node
+        if (currentNode.GetComponent<aNode>().nodeType == aNode.Type.ET_DAW)
         {
-            return;
+            onDaw = true;
         }
-        if (onDaw == false || onPatchBay == false)
+        else
         {
-            if (currentNode.GetComponent<aNode>().outputs != null && currentNode.GetComponent<aNode>().nodeType != aNode.Type.ET_DAW || currentNode.GetComponent<aNode>().outputs != null && currentNode.GetComponent<aNode>().nodeType != aNode.Type.ET_PATCHBAY)
-            {
-                for (int index = 0; index < currentNode.GetComponent<aNode>().outputs.Count; index++)
-                {
-                    if (currentNode.GetComponent<aNode>().outputs[index].GetComponent<aNode>().nodeType != aNode.Type.ET_DAW && currentNode.GetComponent<aNode>().outputs[index].GetComponent<aNode>().nodeType != aNode.Type.ET_PATCHBAY)
-                    {
-                        if (currentNode.GetComponent<aNode>().outputs[index].GetComponent<aNode>().signalObject == signalFlowObjectType || currentNode.GetComponent<aNode>().outputs[index].GetComponent<aNode>().signalObject == null)
-                        {
-                            nodePoweredTransform = currentNode.GetComponent<aNode>().outputs[index].transform;
-                            this.transform.position = nodePoweredTransform.position;
-
-                            previousNode = currentNode;
-                            previousNodeList.Add(previousNode);
-
-                            //Some game manager stuff
-                            gameManager.previousNodeList.Add(previousNode);
-                            aNode.Type type = previousNode.GetComponent<aNode>().nodeType;
-                            gameManager.previousNodeListTypes.Add(type);
-
-                            GameObject currentNodeHolder = currentNode.GetComponent<aNode>().outputs[index];
-                            currentNode = currentNodeHolder;
-                        }
-                    }
-                    else if (currentNode.GetComponent<aNode>().outputs[index].GetComponent<aNode>().nodeType == aNode.Type.ET_DAW)
-                    {
-                        Debug.Log("I am a DAW");
-                        if (currentNode.GetComponent<aNode>().outputs[index].GetComponent<aDAW>().cubeInputs.Count < currentNode.GetComponent<aNode>().outputs[index].GetComponent<aDAW>().subDaws.Count)
-                        {
-                            //Signal object moves to the specific mini DAW position
-                            currentNode.GetComponent<aNode>().outputs[index].GetComponent<aDAW>().cubeInputs.Add(this.gameObject);
-                            int i = (currentNode.GetComponent<aNode>().outputs[index].GetComponent<aDAW>().cubeInputs.Count - 1);
-                            dawInt = i;
-
-                            this.transform.position = currentNode.GetComponent<aNode>().outputs[index].GetComponent<aDAW>().subDaws[i].transform.position;
-
-                            //Adds appropriate DAW positions to the game manager win state
-                            gameManager.previousNodeList.Add(currentNode.GetComponent<aNode>().outputs[index]);
-                            aNode.Type type = currentNode.GetComponent<aNode>().outputs[index].GetComponent<aNode>().nodeType;
-                            gameManager.previousNodeListTypes.Add(type);
-
-                            previousNode = currentNode;
-                            previousNodeList.Add(previousNode);
-
-                            GameObject currentNodeHolder = currentNode.GetComponent<aNode>().outputs[index].GetComponent<aDAW>().subDaws[i];
-                            currentNode = currentNodeHolder;
-
-                            onDaw = true;
-                        }
-                    }
-
-                    else if (currentNode.GetComponent<aNode>().outputs[index].GetComponent<aNode>().nodeType == aNode.Type.ET_PATCHBAY)
-                    {
-                        // ----- NEED TO CHANGE PATCH BAY TO MIRROR DAW FUNCTIONALITY ----- //
-                        Debug.Log("I'm a Patch Bay");
-
-                        if (currentNode.GetComponent<aNode>().outputs[index].GetComponent<aPatchBay>().cubeInputs.Count < currentNode.GetComponent<aNode>().outputs[index].GetComponent<aPatchBay>().subNodes.Count)
-                        {
-                            //Signal object moves to the specific mini DAW position
-                            currentNode.GetComponent<aNode>().outputs[index].GetComponent<aPatchBay>().cubeInputs.Add(this.gameObject);
-                            int i = (currentNode.GetComponent<aNode>().outputs[index].GetComponent<aPatchBay>().cubeInputs.Count - 1);
-                            patchBayInt = i;
-
-                            this.transform.position = currentNode.GetComponent<aNode>().outputs[index].GetComponent<aPatchBay>().subNodes[i].transform.position;
-
-                            //Adds appropriate subPatchBay positions to the game manager win state
-                            gameManager.previousNodeList.Add(currentNode.GetComponent<aNode>().outputs[index]);
-                            aNode.Type type = currentNode.GetComponent<aNode>().outputs[index].GetComponent<aNode>().nodeType;
-                            gameManager.previousNodeListTypes.Add(type);
-
-                            previousNode = currentNode;
-                            previousNodeList.Add(previousNode);
-
-                            GameObject currentNodeHolder = currentNode.GetComponent<aNode>().outputs[index].GetComponent<aPatchBay>().subNodes[i];
-                            currentNode = currentNodeHolder;
-
-                            onPatchBay = true;
-                        }
-                    }
-                }
-            }
-
-            if (currentNode.GetComponent<aNode>().nodeType != aNode.Type.ET_MICROPHONE && previousNodeList.Count != 0)
-            {
-                if (previousNode.GetComponent<aNode>().outputs[0] != currentNode)
-                {
-                    int index = previousNodeList.Count - 1;
-                    int removeIndex = previousNodeList.Count;
-                    currentNode = previousNodeList[index];
-                    this.transform.position = currentNode.transform.position;
-
-                    GameObject pn = previousNodeList[index];
-                    aNode.Type pnType = pn.GetComponent<aNode>().nodeType;
-                    previousNodeList.RemoveAt(index);
-
-                    gameManager.previousNodeList.Remove(pn);
-                    gameManager.previousNodeListTypes.Remove(pnType);
-                }
-            }
-            //If list is empty and current node doesn't equal mic, kill yourself
-            if (previousNodeList.Count == 0 && currentNode.GetComponent<aNode>().nodeType != aNode.Type.ET_MICROPHONE)
-            {
-                Destroy(this.gameObject);
-            }
-
-            //Setting the material of the signal
-            currentNode.GetComponent<aNode>().signalObject = signalFlowObjectType;
-
-            if (signalFlowObjectType == null)
-            {
-                if (previousNode == null)
-                {
-                    signalFlowObjectType = currentNode.GetComponent<aNode>().signalObject;
-                }
-                else
-                {
-                    signalFlowObjectType = previousNode.GetComponent<aNode>().signalObject;
-                }
-            }
+            onDaw = false;
         }
 
-        if (onDaw == true)
+        //Checking if the current node is a Patchbay node
+        if (currentNode.GetComponent<aNode>().nodeType == aNode.Type.ET_PATCHBAY)
         {
-            if (currentNode.gameObject.tag == "subDAW")
-            {
-                GameObject currentNodeHolder = currentNode.GetComponent<SubDAW>().hubDaw.GetComponent<aDAW>().gameObject;
-                currentNode = currentNodeHolder;
-                outputCount = currentNode.GetComponent<aDAW>().outputs.Count;
-            }
+            onPatchBay = true;
+        }
+        else
+        {
+            onPatchBay = false;
+        }
 
+        // ---- For single-input/potential multi-output nodes ---- //
+        if (currentNode.GetComponent<aNode>().outputs.Count != 0 && onDaw == false && onPatchBay == false)
+        {
+            //Make the positions the first index of the output list
+            //More outputs can instantiate a signal instead
+            nodePoweredTransform = currentNode.GetComponent<aNode>().outputs[0].transform;
+            this.transform.position = nodePoweredTransform.position;
+
+            //Setting the previous node as the node we just came from
+            previousNode = currentNode;
+            previousNodeList.Add(previousNode);
+
+            //Adding things to the game manager - win state shit
+            gameManager.previousNodeList.Add(previousNode);
+            aNode.Type type = previousNode.GetComponent<aNode>().nodeType;
+            gameManager.previousNodeListTypes.Add(type);
+
+            GameObject currentNodeHolder = currentNode.GetComponent<aNode>().outputs[0];
+            currentNode = currentNodeHolder;
+        }
+        
+        // ---- DAW FUNCTIONALITY ---- //
+        if (onDaw == true && dawReady == false)
+        {
+            //If the cube input number is less that subDaw count, stops recurring list adding
+            if (currentNode.GetComponent<aDAW>().cubeInputs.Count < currentNode.GetComponent<aDAW>().subDaws.Count)
+            {
+                //Adding one signal cube to the list
+                currentNode.GetComponent<aDAW>().cubeInputs.Add(this.gameObject);
+
+                //Signal object moves to the specific miniDAW position
+                int i = currentNode.GetComponent<aDAW>().cubeInputs.Count - 1;
+                dawInt = i;
+                this.transform.position = currentNode.GetComponent<aDAW>().subDaws[i].transform.position;
+
+                dawReady = true;
+            }
+        }
+        if (dawReady == true)
+        {
+            //If the selected index is the one that you choose
             if (currentNode.GetComponent<aDAW>().selectedIndex == dawInt)
             {
-                if (outputCount < currentNode.GetComponent<aDAW>().outputs.Count)
+                if (countCheck == false)
+                {
+                    genericInt = currentNode.GetComponent<aDAW>().outputs.Count;
+                    countCheck = true;
+                }
+
+                if (genericInt < currentNode.GetComponent<aDAW>().outputs.Count && countCheck == true)
                 {
                     int i = currentNode.GetComponent<aDAW>().outputs.Count - 1;
                     this.transform.position = currentNode.GetComponent<aDAW>().outputs[i].transform.position;
+
+                    previousNode = currentNode;
+                    previousNodeList.Add(previousNode);
+
+                    //Adding things to the game manager - win state shit
+                    gameManager.previousNodeList.Add(previousNode);
+                    aNode.Type type = previousNode.GetComponent<aNode>().nodeType;
+                    gameManager.previousNodeListTypes.Add(type);
+
+                    GameObject currentNodeHolder = currentNode.GetComponent<aDAW>().outputs[i];
+                    currentNode = currentNodeHolder;
+
+                    onDaw = false;
+                    dawReady = false;
+                    countCheck = false;
+                    dawInt = 0;
+                    genericInt = 0;
                 }
+            }
+            if (currentNode.GetComponent<aDAW>().selectedIndex != dawInt)
+            {
+                countCheck = false;
+                genericInt = 0;
             }
         }
 
-        if (onPatchBay == true)
+        // ---- PATCHBAY FUNCTIONALITY ---- //
+        if (onPatchBay == true && patchBayReady == false)
         {
-            if (currentNode.gameObject.tag == "subPatchBay")
+            //If the cube input number is less than mini patchBay count, stops recurring list adding
+            if (currentNode.GetComponent<aPatchBay>().cubeInputs.Count < currentNode.GetComponent<aPatchBay>().subNodes.Count)
             {
-                GameObject currentNodeHolder = currentNode.GetComponent<subPB>().pb.GetComponent<aPatchBay>().gameObject;
-                currentNode = currentNodeHolder;
-                outputCount = currentNode.GetComponent<aPatchBay>().outputs.Count;
-            }
+                //Adding one signal cube to the list
+                currentNode.GetComponent<aPatchBay>().cubeInputs.Add(this.gameObject);
 
+                //Signal object moves to the specific subNode position
+                int i = currentNode.GetComponent<aPatchBay>().cubeInputs.Count - 1;
+                patchBayInt = i;
+                this.transform.position = currentNode.GetComponent<aPatchBay>().subNodes[i].transform.position;
+
+                patchBayReady = true;
+            }
+        }
+
+        if (patchBayReady == true)
+        {
+            //If the selected index is the one you choose
             if (currentNode.GetComponent<aPatchBay>().selectedIndex == patchBayInt)
             {
-                if (outputCount < currentNode.GetComponent<aPatchBay>().outputs.Count)
+                if (countCheck == false)
+                {
+                    genericInt = currentNode.GetComponent<aPatchBay>().outputs.Count;
+                    countCheck = true;
+                }
+
+                if (genericInt < currentNode.GetComponent<aPatchBay>().outputs.Count && countCheck == true)
                 {
                     int i = currentNode.GetComponent<aPatchBay>().outputs.Count - 1;
                     this.transform.position = currentNode.GetComponent<aPatchBay>().outputs[i].transform.position;
+
+                    previousNode = currentNode;
+                    previousNodeList.Add(previousNode);
+
+                    //Adding things to the game manager - win state shit
+                    gameManager.previousNodeList.Add(previousNode);
+                    aNode.Type type = previousNode.GetComponent<aNode>().nodeType;
+                    gameManager.previousNodeListTypes.Add(type);
+
+                    GameObject currentNodeHolder = currentNode.GetComponent<aPatchBay>().outputs[i];
+                    currentNode = currentNodeHolder;
+
+                    onPatchBay = false;
+                    patchBayReady = false;
+                    patchBayInt = 0;
+                    genericInt = 0;
                 }
+            }
+
+            if (currentNode.GetComponent<aPatchBay>().selectedIndex != patchBayInt)
+            {
+                countCheck = false;
+                genericInt = 0;
             }
         }
     }
