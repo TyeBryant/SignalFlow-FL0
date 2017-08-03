@@ -56,9 +56,10 @@ public class SignalFlowObject : MonoBehaviour
         {
             onDaw = true;
         }
-        else
+        else if (currentNode.GetComponent<aNode>().nodeType != aNode.Type.ET_DAW)
         {
             onDaw = false;
+            dawReady = false;
         }
 
         //Checking if the current node is a Patchbay node
@@ -66,9 +67,10 @@ public class SignalFlowObject : MonoBehaviour
         {
             onPatchBay = true;
         }
-        else
+        else if (currentNode.GetComponent<aNode>().nodeType != aNode.Type.ET_PATCHBAY)
         {
             onPatchBay = false;
+            patchBayReady = false;
         }
 
         // ---- For single-input/potential multi-output nodes ---- //
@@ -141,6 +143,8 @@ public class SignalFlowObject : MonoBehaviour
                     countCheck = false;
                     dawInt = 0;
                     genericInt = 0;
+
+                    currentNode.GetComponent<aDAW>().cubeInputs.Remove(this.gameObject);
                 }
             }
             if (currentNode.GetComponent<aDAW>().selectedIndex != dawInt)
@@ -199,6 +203,8 @@ public class SignalFlowObject : MonoBehaviour
                     patchBayReady = false;
                     patchBayInt = 0;
                     genericInt = 0;
+
+                    currentNode.GetComponent<aPatchBay>().cubeInputs.Remove(this.gameObject);
                 }
             }
 
@@ -206,6 +212,52 @@ public class SignalFlowObject : MonoBehaviour
             {
                 countCheck = false;
                 genericInt = 0;
+            }
+        }
+
+        //If list is empty and current node doesn't equal mic (start), kill yourself
+        if (previousNodeList.Count == 0 && currentNode.GetComponent<aNode>().nodeType != aNode.Type.ET_MICROPHONE)
+        {
+            Destroy(this.gameObject);
+        }
+
+        //Setting the material of the signal
+        currentNode.GetComponent<aNode>().signalObject = signalFlowObjectType;
+
+        //If there is nothing set in this signalflowobjecttype 
+        if (signalFlowObjectType == null)
+        {
+            if (previousNode == null)
+            {
+                //Get a signal flow type from the node
+                signalFlowObjectType = currentNode.GetComponent<aNode>().signalObject;
+            }
+            else
+            {
+                signalFlowObjectType = previousNode.GetComponent<aNode>().signalObject;
+            }
+        }
+
+        //Backtracking?
+        if (currentNode.GetComponent<aNode>().nodeType != aNode.Type.ET_MICROPHONE)
+        {
+            if (currentNode.GetComponent<aNode>().isPowered == false)
+            {
+                if (onDaw)
+                {
+                    currentNode.GetComponent<aDAW>().cubeInputs.Remove(this.gameObject);
+                }
+
+                if (onPatchBay)
+                {
+                    currentNode.GetComponent<aPatchBay>().cubeInputs.Remove(this.gameObject);
+                }
+                int index = previousNodeList.Count - 1;
+                int removeIndex = previousNodeList.Count;
+                currentNode = previousNodeList[index];
+                this.transform.position = currentNode.transform.position;
+
+                previousNodeList.RemoveAt(index);
             }
         }
     }
