@@ -11,15 +11,18 @@ public class LineRendCol : MonoBehaviour
     public LineRenderer lineRend;
 
     public aNode node;
-
+    public GameObject outNode;
     private bool isDragging = false;
 
     private PolygonCollider2D polyCol2D;
+
+    aConnectionManager conMan;
 
     // Use this for initialization
     void Start()
     {
         polyCol2D = gameObject.AddComponent<PolygonCollider2D>();
+        conMan = FindObjectOfType<aConnectionManager>();
     }
 
     // Update is called once per frame
@@ -33,7 +36,7 @@ public class LineRendCol : MonoBehaviour
 
         if (isDragging)
         {
-            endPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            endPoint = conMan.mousePointer.transform.position;
             lineRend.SetPosition(1, endPoint);
         }
     }
@@ -43,9 +46,37 @@ public class LineRendCol : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             isDragging = true;
-            node.Disconnect();
-        }
-        else if (Input.GetMouseButtonDown(1))
+            Disconnect();
+
+            conMan.CarrySignal(node.gameObject);
             Destroy(this.gameObject);
+        }
+    }
+    
+    //Manage Disconnecting
+    void Disconnect()
+    {
+        node.outputs.Remove(outNode);
+        aNode s = outNode.GetComponent<aNode>();
+        if (!s.GetComponent<aDAW>())
+        {
+            //Make sure s is not powered anymore            
+            s.inputs.Remove(node.gameObject);
+            if (s.inputs.Count == 0)
+                s.isPowered = false;
+        }
+        else
+        {
+            while (s.GetComponent<aDAW>().signalObjs.Contains(node.signalObject))
+            {
+                s.connectionRenderers.RemoveAt(s.GetComponent<aDAW>().signalObjs.IndexOf(node.signalObject));
+                s.GetComponent<aDAW>().signalObjs.Remove(node.signalObject);
+            }
+            //Make sure s is not powered anymore            
+            s.inputs.Remove(node.gameObject);
+            if (s.inputs.Count == 0)
+                s.isPowered = false;
+        }
+
     }
 }

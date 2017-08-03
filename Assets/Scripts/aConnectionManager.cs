@@ -34,7 +34,16 @@ public class aConnectionManager : MonoBehaviour
 
         if (isCarryingSignal)
         {
+            //Disconnect from mouse
+            if (Input.GetMouseButtonUp(0))
+            {
+                DisconnectSignal();
+            }
+
             Debug.DrawLine(mousePointer.transform.position, inputFrom.transform.position, Color.blue);
+
+            if(lineRend != null)
+                lineRend.SetPosition(1, mousePointer.transform.position);
 
             if (Input.GetMouseButtonDown(0) && lineRend == null)
             {
@@ -48,19 +57,15 @@ public class aConnectionManager : MonoBehaviour
                     lineRendObj = Instantiate(lineRenderPrefab);
                 lineRend = lineRendObj.GetComponent<LineRenderer>();
                 lineRend.SetPosition(0, inputFrom.transform.position);
+                lineRend.SetPosition(1, mousePointer.transform.position);
+
             }
             else if (Input.GetMouseButtonDown(0) && lineRend != null)
-                isCarryingSignal = true;
-
-            lineRend.SetPosition(1, mousePointer.transform.position);
-
-            //If the player right clicks, disconnect from the signal
-            if (Input.GetMouseButtonDown(1))
             {
-                Destroy(lineRendObj);
-                inputFrom = null;
-                isCarryingSignal = false;
+                isCarryingSignal = true;
+                //
             }
+                
         }
         else
         {
@@ -73,7 +78,6 @@ public class aConnectionManager : MonoBehaviour
     {
         //Change signal to false and make input object null
         isCarryingSignal = false;
-        inputFrom.GetComponent<aNode>().Disconnect();
         inputFrom = null;
     }
 
