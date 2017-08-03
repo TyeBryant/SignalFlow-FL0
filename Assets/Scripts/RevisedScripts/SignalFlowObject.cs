@@ -21,8 +21,11 @@ public class SignalFlowObject : MonoBehaviour
     public GameManager gameManager;
 
     public bool onDaw;
+    public bool onPatchBay;
 
     public int dawInt;
+    public int patchBayInt;
+
     public int outputCount;
 
     // Use this for initialization
@@ -31,6 +34,7 @@ public class SignalFlowObject : MonoBehaviour
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
 
         onDaw = false;
+        onPatchBay = false;
     }
 
     // Update is called once per frame
@@ -45,13 +49,13 @@ public class SignalFlowObject : MonoBehaviour
         {
             return;
         }
-        if (onDaw == false)
+        if (onDaw == false || onPatchBay == false)
         {
-            if (currentNode.GetComponent<aNode>().outputs != null && currentNode.GetComponent<aNode>().nodeType != aNode.Type.ET_DAW)
+            if (currentNode.GetComponent<aNode>().outputs != null && currentNode.GetComponent<aNode>().nodeType != aNode.Type.ET_DAW || currentNode.GetComponent<aNode>().outputs != null && currentNode.GetComponent<aNode>().nodeType != aNode.Type.ET_PATCHBAY)
             {
                 for (int index = 0; index < currentNode.GetComponent<aNode>().outputs.Count; index++)
                 {
-                    if (currentNode.GetComponent<aNode>().outputs[index].GetComponent<aNode>().nodeType != aNode.Type.ET_DAW)
+                    if (currentNode.GetComponent<aNode>().outputs[index].GetComponent<aNode>().nodeType != aNode.Type.ET_DAW && currentNode.GetComponent<aNode>().outputs[index].GetComponent<aNode>().nodeType != aNode.Type.ET_PATCHBAY)
                     {
                         if (currentNode.GetComponent<aNode>().outputs[index].GetComponent<aNode>().signalObject == signalFlowObjectType || currentNode.GetComponent<aNode>().outputs[index].GetComponent<aNode>().signalObject == null)
                         {
@@ -70,7 +74,7 @@ public class SignalFlowObject : MonoBehaviour
                             currentNode = currentNodeHolder;
                         }
                     }
-                    else
+                    else if (currentNode.GetComponent<aNode>().outputs[index].GetComponent<aNode>().nodeType == aNode.Type.ET_DAW)
                     {
                         Debug.Log("I am a DAW");
                         if (currentNode.GetComponent<aNode>().outputs[index].GetComponent<aDAW>().cubeInputs.Count < currentNode.GetComponent<aNode>().outputs[index].GetComponent<aDAW>().subDaws.Count)
@@ -87,8 +91,6 @@ public class SignalFlowObject : MonoBehaviour
                             aNode.Type type = currentNode.GetComponent<aNode>().outputs[index].GetComponent<aNode>().nodeType;
                             gameManager.previousNodeListTypes.Add(type);
 
-                            //Need to create functionality for upon specific mini node selection, move the specific signal object with it
-
                             previousNode = currentNode;
                             previousNodeList.Add(previousNode);
 
@@ -96,9 +98,35 @@ public class SignalFlowObject : MonoBehaviour
                             currentNode = currentNodeHolder;
 
                             onDaw = true;
+                        }
+                    }
 
-                            //If dawInt = selectedInt, move to position of stream
-                            //else, don't move
+                    else if (currentNode.GetComponent<aNode>().outputs[index].GetComponent<aNode>().nodeType == aNode.Type.ET_PATCHBAY)
+                    {
+                        // ----- NEED TO CHANGE PATCH BAY TO MIRROR DAW FUNCTIONALITY ----- //
+                        Debug.Log("I'm a PatchBay");
+
+                        if (currentNode.GetComponent<aNode>().outputs[index].GetComponent<PatchBay>().cubeInputs.Count < currentNode.GetComponent<aNode>().outputs[index].GetComponent<PatchBay>().subNodes.Count)
+                        {
+                            //Signal object moves to the specific mini DAW position
+                            currentNode.GetComponent<aNode>().outputs[index].GetComponent<PatchBay>().cubeInputs.Add(this.gameObject);
+                            int i = (currentNode.GetComponent<aNode>().outputs[index].GetComponent<PatchBay>().cubeInputs.Count - 1);
+                            patchBayInt = i;
+
+                            this.transform.position = currentNode.GetComponent<aNode>().outputs[index].GetComponent<PatchBay>().subNodes[i].transform.position;
+
+                            //Adds appropriate subPatchBay positions to the game manager win state
+                            gameManager.previousNodeList.Add(currentNode.GetComponent<aNode>().outputs[index]);
+                            aNode.Type type = currentNode.GetComponent<aNode>().outputs[index].GetComponent<aNode>().nodeType;
+                            gameManager.previousNodeListTypes.Add(type);
+
+                            previousNode = currentNode;
+                            previousNodeList.Add(previousNode);
+
+                            GameObject currentNodeHolder = currentNode.GetComponent<aNode>().outputs[index].GetComponent<PatchBay>().subNodes[i];
+                            currentNode = currentNodeHolder;
+
+                            onPatchBay = true;
                         }
                     }
                 }
@@ -158,6 +186,25 @@ public class SignalFlowObject : MonoBehaviour
                 {
                     int i = currentNode.GetComponent<aDAW>().outputs.Count - 1;
                     this.transform.position = currentNode.GetComponent<aDAW>().outputs[i].transform.position;
+                }
+            }
+        }
+
+        if (onPatchBay == true)
+        {
+            if (currentNode.gameObject.tag == "subPatchBay")
+            {
+                GameObject currentNodeHolder = currentNode.GetComponent<subPB>().pb.GetComponent<PatchBay>().gameObject;
+                currentNode = currentNodeHolder;
+                outputCount = currentNode.GetComponent<PatchBay>().outputs.Count;
+            }
+
+            if (currentNode.GetComponent<PatchBay>().selectedIndex == patchBayInt)
+            {
+                if (outputCount < currentNode.GetComponent<PatchBay>().outputs.Count)
+                {
+                    int i = currentNode.GetComponent<PatchBay>().outputs.Count - 1;
+                    this.transform.position = currentNode.GetComponent<PatchBay>().outputs[i].transform.position;
                 }
             }
         }

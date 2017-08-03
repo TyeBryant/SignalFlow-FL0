@@ -7,7 +7,14 @@ public class PatchBay : aNode, IPointerClickHandler {
     public List<GameObject> inputNodes = new List<GameObject>();
     public List<GameObject> outputNodes = new List<GameObject>();
     public List<GameObject> settingNodes = new List<GameObject>();
+
+    public GameObject subNodeObject;
+    public float nodeRadiusSpacing;
+    //This shouldn't really be set beforehand
     public List<GameObject> subNodes = new List<GameObject>(); // Used for selecting signal
+    //Signal things
+    public List<GameObject> cubeInputs = new List<GameObject>();
+
     public List<Vector3> inputNodePos = new List<Vector3>();
     public List<GameObject> signalObjs = new List<GameObject>();
 
