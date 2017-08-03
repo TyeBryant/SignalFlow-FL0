@@ -6,11 +6,11 @@ using UnityEngine;
 public class SignalFlowObject : MonoBehaviour
 {
     //The current node that the signal is on
-    //[HideInInspector]
+    [HideInInspector]
     public GameObject currentNode;
 
     //The node that the signal came from
-    //[HideInInspector]
+    [HideInInspector]
     public GameObject previousNode;
 
     //The movement that the signal has to perform to get on the current node
@@ -27,9 +27,11 @@ public class SignalFlowObject : MonoBehaviour
     public bool onDaw;
     public bool dawReady;
 
+    //Patch bay bools
     public bool onPatchBay;
     public bool patchBayReady;
 
+    //DAW bools
     public int dawInt;
     public int patchBayInt;
 
