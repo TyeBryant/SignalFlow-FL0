@@ -169,19 +169,26 @@ public class aNode : MonoBehaviour
         //Used for placing the signal exclusively
         if (Input.GetMouseButtonUp(0))
         {
+            Debug.Log("Done a thing");
             if (connectionManager.isCarryingSignal && connectionManager.inputFrom != this.gameObject)
             {
+                Debug.Log("Done another thing");
                 if (!isPowered)
                 {
                     //If check returns true, then run place signal on the connection amanger
-                    if (Check())
+                    Debug.Log("Still doing things");
+                    if (Check()) {
                         connectionManager.inputFrom.GetComponent<aNode>().PlaceSignal(this.gameObject);
+                        Debug.Log("More things being done");
+                    }
                 }
                 else if (isPowered)
                 {
                     //If check returns true and I can still accept inputs
-                    if (Check() && inputs.Count < maximumInputs)
+                    if (Check() && inputs.Count < maximumInputs) {
                         connectionManager.inputFrom.GetComponent<aNode>().PlaceSignal(this.gameObject);
+                        Debug.Log("Still more things being done");
+                    }
                 }
             }
         }
@@ -238,6 +245,8 @@ public class aNode : MonoBehaviour
             ret2 = true;
         else if (connectionManager.inputFrom.GetComponent<aNode>().nodeChannel == nodeChannel)
             ret2 = true;
+        else if (nodeChannel == Channel.EC_MULTI)
+            ret2 = true;
         else
             ret2 = false;
 
@@ -247,6 +256,8 @@ public class aNode : MonoBehaviour
     //Place the signal down on the outputting node
     public virtual void PlaceSignal(GameObject _outputTo)
     {
+        if (GetComponent<aPatchBay>())
+            Debug.Log("Did a thing from aNode PS");
         if (!outputs.Contains(_outputTo))
         {
             //If this node's channel is null, and the output's node is not null or multiple

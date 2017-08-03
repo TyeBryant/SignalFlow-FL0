@@ -49,9 +49,9 @@ public class aPatchBay : aNode, IPointerClickHandler {
             for (int index = 0; index < inputs.Count; ++index) {
                 inputNodes[index].SetActive(true);
                 inputNodes[index].GetComponent<aNode>().inputs.Add(inputs[index]);
-                inputNodes[index].transform.position = inputNodePos[index];
                 outputNodes[index].SetActive(true);
                 settingNodes[index].SetActive(true);
+                Debug.Log(inputs.Count);
             }
 
             GetComponent<CircleCollider2D>().enabled = false;
@@ -63,6 +63,7 @@ public class aPatchBay : aNode, IPointerClickHandler {
                     node.SetActive(false);
             else
             {
+
                 pbCounter++;
                 foreach (GameObject node in inputNodes)
                     node.SetActive(false);
@@ -90,13 +91,13 @@ public class aPatchBay : aNode, IPointerClickHandler {
         base.OnMouseOver();
 
         if (Input.GetMouseButtonUp(0)) {
-            Debug.Log("Done a thing from OnMouseOver");
             foreach (GameObject obj in subNodes)
                 Destroy(obj);
             subNodes.Clear();
+            Debug.Log(inputs.Count);
             for (int i = 0; i < inputs.Count; ++i) {
                 Vector3 spawnPos = (inputs[i].transform.position - transform.position).normalized * nodeRadiusSpacing;
-                GameObject obj = Instantiate(subNodeObject, spawnPos, Quaternion.identity);
+                GameObject obj = Instantiate(subNodeObject, transform.position + spawnPos, Quaternion.identity);
                 obj.GetComponent<subPB>().pb = this;
                 obj.GetComponent<subPB>().selectedIndex = i;
                 subNodes.Add(obj);
@@ -160,33 +161,34 @@ public class aPatchBay : aNode, IPointerClickHandler {
     public override void PlaceSignal(GameObject _outputTo) 
     {
         Debug.Log("Done a thing from placesignal");
-        signalObjs.Add(inputs[selectedIndex].GetComponent<aNode>().signalObject);
+        if (inputs.Count > 0)
+            signalObjs.Add(inputs[selectedIndex].GetComponent<aNode>().signalObject);
         base.PlaceSignal(_outputTo);
     }
 
-    void SetPositions(float distance = 0.75f, bool type = false) {
-        List<GameObject> activeSubNodes = new List<GameObject>();
-        foreach (GameObject node in subNodes)
-            if (node.activeSelf)
-                activeSubNodes.Add(node);
+    //void SetPositions(float distance = 0.75f, bool type = false) {
+    //    List<GameObject> activeSubNodes = new List<GameObject>();
+    //    foreach (GameObject node in subNodes)
+    //        if (node.activeSelf)
+    //            activeSubNodes.Add(node);
 
-        float range = 180;
-        float interval = range / (activeSubNodes.Count + 1);
-        for (int i = 0; i < activeSubNodes.Count; ++i) {
-            float position;
-            position = i * interval + interval;
-            if (position < 270)
-                position += 270;
-            else
-                position -= 90;
-            Vector3 newPos = new Vector3((Mathf.Sin(position * Mathf.Deg2Rad)) * distance, (Mathf.Cos(position * Mathf.Deg2Rad)) * distance, 2);
-            activeSubNodes[i].transform.localPosition = newPos;
-            if (type) {
-                activeOuNodes[i].transform.localPosition = new Vector3(newPos.x, -newPos.y, newPos.z);
-                activeOuNodes[i].SetActive(true);
-            }
+    //    float range = 180;
+    //    float interval = range / (activeSubNodes.Count + 1);
+    //    for (int i = 0; i < activeSubNodes.Count; ++i) {
+    //        float position;
+    //        position = i * interval + interval;
+    //        if (position < 270)
+    //            position += 270;
+    //        else
+    //            position -= 90;
+    //        Vector3 newPos = new Vector3((Mathf.Sin(position * Mathf.Deg2Rad)) * distance, (Mathf.Cos(position * Mathf.Deg2Rad)) * distance, 2);
+    //        activeSubNodes[i].transform.localPosition = newPos;
+    //        if (type) {
+    //            activeOuNodes[i].transform.localPosition = new Vector3(newPos.x, -newPos.y, newPos.z);
+    //            activeOuNodes[i].SetActive(true);
+    //        }
 
-            activeSubNodes[i].SetActive(true);
-        }
-    }
+    //        activeSubNodes[i].SetActive(true);
+    //    }
+    //}
 }

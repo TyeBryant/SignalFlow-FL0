@@ -30,8 +30,8 @@ public class LineRendCol : MonoBehaviour
     {
         Vector2 c1 = transform.InverseTransformPoint(new Vector2(startPoint.x, startPoint.y + lineRend.startWidth / 2));
         Vector2 c2 = transform.InverseTransformPoint(new Vector2(startPoint.x, startPoint.y - lineRend.startWidth / 2));
-        Vector2 c3 = transform.InverseTransformPoint(new Vector2(endPoint.x, endPoint.y - lineRend.endWidth / 2));
-        Vector2 c4 = transform.InverseTransformPoint(new Vector2(endPoint.x, endPoint.y + lineRend.endWidth / 2));
+        Vector2 c3 = transform.InverseTransformPoint(new Vector2(endPoint.x, endPoint.y - lineRend.endWidth / 2)) * 0.7f;
+        Vector2 c4 = transform.InverseTransformPoint(new Vector2(endPoint.x, endPoint.y + lineRend.endWidth / 2)) * 0.7f;
         polyCol2D.SetPath(0, new Vector2[] { c1, c2, c3, c4 });
 
         if (isDragging)

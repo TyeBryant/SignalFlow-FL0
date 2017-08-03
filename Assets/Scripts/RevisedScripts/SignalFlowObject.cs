@@ -104,7 +104,7 @@ public class SignalFlowObject : MonoBehaviour
                     else if (currentNode.GetComponent<aNode>().outputs[index].GetComponent<aNode>().nodeType == aNode.Type.ET_PATCHBAY)
                     {
                         // ----- NEED TO CHANGE PATCH BAY TO MIRROR DAW FUNCTIONALITY ----- //
-                        Debug.Log("I'm a PatchBay");
+                        Debug.Log("I'm a Patch Bay");
 
                         if (currentNode.GetComponent<aNode>().outputs[index].GetComponent<aPatchBay>().cubeInputs.Count < currentNode.GetComponent<aNode>().outputs[index].GetComponent<aPatchBay>().subNodes.Count)
                         {

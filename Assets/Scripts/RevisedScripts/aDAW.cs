@@ -75,7 +75,7 @@ public class aDAW : aNode {
             {
 
                 Vector3 spawnPos = (inputs[i].transform.position - transform.position).normalized * nodeRadiusSpacing;
-                GameObject obj = Instantiate(subDawObj, spawnPos, Quaternion.identity);
+                GameObject obj = Instantiate(subDawObj, transform.position + spawnPos, Quaternion.identity);
                 obj.GetComponent<SubDAW>().hubDaw = GetComponent<aDAW>();
                 obj.GetComponent<SubDAW>().selectedIndex = i;
                 subDaws.Add(obj);

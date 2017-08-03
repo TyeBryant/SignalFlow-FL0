@@ -40,7 +40,7 @@ public class aConnectionManager : MonoBehaviour
                 DisconnectSignal();
             }
 
-            Debug.DrawLine(mousePointer.transform.position, inputFrom.transform.position, Color.blue);
+            //Debug.DrawLine(mousePointer.transform.position, inputFrom.transform.position, Color.blue);
 
             if(lineRend != null)
                 lineRend.SetPosition(1, mousePointer.transform.position);
@@ -49,9 +49,11 @@ public class aConnectionManager : MonoBehaviour
             {
                 bool zoomed = false;
                 foreach (GameObject obj in GameObject.FindGameObjectsWithTag("PatchBay"))
-                    if (obj.GetComponent<aPatchBay>().zoomed) {
+                    if (obj.GetComponent<aPatchBay>()) {
+                        if (obj.GetComponent<aPatchBay>().zoomed) {
                         lineRendObj = Instantiate(pbLineRenderPrefab);
                         zoomed = true;
+                        }
                     }
                 if(!zoomed)
                     lineRendObj = Instantiate(lineRenderPrefab);
