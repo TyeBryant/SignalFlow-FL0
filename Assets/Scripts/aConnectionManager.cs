@@ -49,7 +49,7 @@ public class aConnectionManager : MonoBehaviour
             {
                 bool zoomed = false;
                 foreach (GameObject obj in GameObject.FindGameObjectsWithTag("PatchBay"))
-                    if (obj.GetComponent<PatchBay>().zoomed) {
+                    if (obj.GetComponent<aPatchBay>().zoomed) {
                         lineRendObj = Instantiate(pbLineRenderPrefab);
                         zoomed = true;
                     }

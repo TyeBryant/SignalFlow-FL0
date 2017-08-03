@@ -106,14 +106,14 @@ public class SignalFlowObject : MonoBehaviour
                         // ----- NEED TO CHANGE PATCH BAY TO MIRROR DAW FUNCTIONALITY ----- //
                         Debug.Log("I'm a PatchBay");
 
-                        if (currentNode.GetComponent<aNode>().outputs[index].GetComponent<PatchBay>().cubeInputs.Count < currentNode.GetComponent<aNode>().outputs[index].GetComponent<PatchBay>().subNodes.Count)
+                        if (currentNode.GetComponent<aNode>().outputs[index].GetComponent<aPatchBay>().cubeInputs.Count < currentNode.GetComponent<aNode>().outputs[index].GetComponent<aPatchBay>().subNodes.Count)
                         {
                             //Signal object moves to the specific mini DAW position
-                            currentNode.GetComponent<aNode>().outputs[index].GetComponent<PatchBay>().cubeInputs.Add(this.gameObject);
-                            int i = (currentNode.GetComponent<aNode>().outputs[index].GetComponent<PatchBay>().cubeInputs.Count - 1);
+                            currentNode.GetComponent<aNode>().outputs[index].GetComponent<aPatchBay>().cubeInputs.Add(this.gameObject);
+                            int i = (currentNode.GetComponent<aNode>().outputs[index].GetComponent<aPatchBay>().cubeInputs.Count - 1);
                             patchBayInt = i;
 
-                            this.transform.position = currentNode.GetComponent<aNode>().outputs[index].GetComponent<PatchBay>().subNodes[i].transform.position;
+                            this.transform.position = currentNode.GetComponent<aNode>().outputs[index].GetComponent<aPatchBay>().subNodes[i].transform.position;
 
                             //Adds appropriate subPatchBay positions to the game manager win state
                             gameManager.previousNodeList.Add(currentNode.GetComponent<aNode>().outputs[index]);
@@ -123,7 +123,7 @@ public class SignalFlowObject : MonoBehaviour
                             previousNode = currentNode;
                             previousNodeList.Add(previousNode);
 
-                            GameObject currentNodeHolder = currentNode.GetComponent<aNode>().outputs[index].GetComponent<PatchBay>().subNodes[i];
+                            GameObject currentNodeHolder = currentNode.GetComponent<aNode>().outputs[index].GetComponent<aPatchBay>().subNodes[i];
                             currentNode = currentNodeHolder;
 
                             onPatchBay = true;
@@ -194,17 +194,17 @@ public class SignalFlowObject : MonoBehaviour
         {
             if (currentNode.gameObject.tag == "subPatchBay")
             {
-                GameObject currentNodeHolder = currentNode.GetComponent<subPB>().pb.GetComponent<PatchBay>().gameObject;
+                GameObject currentNodeHolder = currentNode.GetComponent<subPB>().pb.GetComponent<aPatchBay>().gameObject;
                 currentNode = currentNodeHolder;
-                outputCount = currentNode.GetComponent<PatchBay>().outputs.Count;
+                outputCount = currentNode.GetComponent<aPatchBay>().outputs.Count;
             }
 
-            if (currentNode.GetComponent<PatchBay>().selectedIndex == patchBayInt)
+            if (currentNode.GetComponent<aPatchBay>().selectedIndex == patchBayInt)
             {
-                if (outputCount < currentNode.GetComponent<PatchBay>().outputs.Count)
+                if (outputCount < currentNode.GetComponent<aPatchBay>().outputs.Count)
                 {
-                    int i = currentNode.GetComponent<PatchBay>().outputs.Count - 1;
-                    this.transform.position = currentNode.GetComponent<PatchBay>().outputs[i].transform.position;
+                    int i = currentNode.GetComponent<aPatchBay>().outputs.Count - 1;
+                    this.transform.position = currentNode.GetComponent<aPatchBay>().outputs[i].transform.position;
                 }
             }
         }
