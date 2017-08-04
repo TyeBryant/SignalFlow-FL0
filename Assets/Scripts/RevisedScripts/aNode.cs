@@ -126,6 +126,12 @@ public class aNode : MonoBehaviour
     // Update is called once per frame
     public void Update()
     {
+        //Making sure signals don't show when there is no power
+        if (nodeType != Type.ET_MICROPHONE && isPowered == false)
+        {
+            signalObject = null;
+        }
+
         //Only execute if this is above 0
         if (outputs.Count > 0)
         {
