@@ -17,11 +17,11 @@ public class SignalFlowStart : MonoBehaviour
 
     public List<aNode.Type> banList;
 
-    //[HideInInspector]
+    [HideInInspector]
     //Win state tracking
     public List<aNode.Type> previousNodeListTypes;
 
-    //[HideInInspector]
+    [HideInInspector]
     public List<GameObject> previousNodeList;
 
     [HideInInspector]

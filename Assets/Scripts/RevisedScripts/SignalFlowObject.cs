@@ -16,7 +16,7 @@ public class SignalFlowObject : MonoBehaviour
     //The movement that the signal has to perform to get on the current node
     public Transform nodePoweredTransform;
 
-    //[HideInInspector]
+    [HideInInspector]
     public List<GameObject> previousNodeList;
 
     public GameObject signalFlowObjectType;
@@ -24,23 +24,34 @@ public class SignalFlowObject : MonoBehaviour
     public GameManager gameManager;
 
     //Something that needs to be assigned to new ones as well
+    [HideInInspector]
     public GameObject StartingNode;
 
     //Bools to check if they are on multi-input/output nodes
+    [HideInInspector]
     public bool onDaw;
+
+    [HideInInspector]
     public bool dawReady;
 
     //Patch bay bools
+    [HideInInspector]
     public bool onPatchBay;
+    [HideInInspector]
     public bool patchBayReady;
 
     //DAW bools
+    [HideInInspector]
     public int dawInt;
+    [HideInInspector]
     public int patchBayInt;
 
+    [HideInInspector]
     public int outputCount;
+    [HideInInspector]
     public int genericInt;
 
+    [HideInInspector]
     public bool countCheck;
 
     public int signalNumber;

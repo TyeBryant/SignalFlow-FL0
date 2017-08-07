@@ -97,7 +97,9 @@ public class aNode : MonoBehaviour
 
     public int signalNumber;
 
+    [HideInInspector]
     public SignalFlowStart[] starting;
+    [HideInInspector]
     public List<GameObject> startingNodes;
 
     // Use this for initialization
