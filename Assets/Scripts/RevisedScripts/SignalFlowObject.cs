@@ -16,12 +16,15 @@ public class SignalFlowObject : MonoBehaviour
     //The movement that the signal has to perform to get on the current node
     public Transform nodePoweredTransform;
 
-    [HideInInspector]
+    //[HideInInspector]
     public List<GameObject> previousNodeList;
 
     public GameObject signalFlowObjectType;
 
     public GameManager gameManager;
+
+    //Something that needs to be assigned to new ones as well
+    public GameObject StartingNode;
 
     //Bools to check if they are on multi-input/output nodes
     public bool onDaw;
@@ -40,6 +43,8 @@ public class SignalFlowObject : MonoBehaviour
 
     public bool countCheck;
 
+    public int signalNumber;
+
     // Use this for initialization
     void Start()
     {
@@ -53,6 +58,17 @@ public class SignalFlowObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (currentNode.GetComponent<aNode>().nodeType == aNode.Type.ET_MICROPHONE)
+        {
+            previousNodeList.Clear();
+        }
+
+        //Some win checking stuff
+        if (currentNode.GetComponent<aNode>().nodeType != aNode.Type.ET_DAW || currentNode.GetComponent<aNode>().nodeType != aNode.Type.ET_PATCHBAY)
+        {
+            currentNode.GetComponent<aNode>().signalNumber = signalNumber;
+        }
+
         //Checking if the current node is a DAW node
         if (currentNode.GetComponent<aNode>().nodeType == aNode.Type.ET_DAW)
         {
@@ -88,9 +104,7 @@ public class SignalFlowObject : MonoBehaviour
             previousNodeList.Add(previousNode);
 
             //Adding things to the game manager - win state shit
-            gameManager.previousNodeList.Add(previousNode);
             aNode.Type type = previousNode.GetComponent<aNode>().nodeType;
-            gameManager.previousNodeListTypes.Add(type);
 
             GameObject currentNodeHolder = currentNode.GetComponent<aNode>().outputs[0];
             currentNode = currentNodeHolder;
@@ -102,6 +116,14 @@ public class SignalFlowObject : MonoBehaviour
             //If the cube input number is less that subDaw count, stops recurring list adding
             if (currentNode.GetComponent<aDAW>().cubeInputs.Count < currentNode.GetComponent<aDAW>().subDaws.Count)
             {
+                if (currentNode.GetComponent<aDAW>().signalNumbers.Contains(this.signalNumber))
+                {
+
+                }
+                else
+                {
+                    currentNode.GetComponent<aDAW>().signalNumbers.Add(this.signalNumber);
+                }
                 //Adding one signal cube to the list
                 currentNode.GetComponent<aDAW>().cubeInputs.Add(this.gameObject);
 
@@ -133,9 +155,7 @@ public class SignalFlowObject : MonoBehaviour
                     previousNodeList.Add(previousNode);
 
                     //Adding things to the game manager - win state shit
-                    gameManager.previousNodeList.Add(previousNode);
                     aNode.Type type = previousNode.GetComponent<aNode>().nodeType;
-                    gameManager.previousNodeListTypes.Add(type);
 
                     GameObject currentNodeHolder = currentNode.GetComponent<aDAW>().outputs[i];
                     currentNode = currentNodeHolder;
@@ -146,7 +166,7 @@ public class SignalFlowObject : MonoBehaviour
                     dawInt = 0;
                     genericInt = 0;
 
-                    currentNode.GetComponent<aDAW>().cubeInputs.Remove(this.gameObject);
+                    previousNode.GetComponent<aDAW>().cubeInputs.Remove(this.gameObject);
                 }
             }
             if (currentNode.GetComponent<aDAW>().selectedIndex != dawInt)
@@ -162,6 +182,14 @@ public class SignalFlowObject : MonoBehaviour
             //If the cube input number is less than mini patchBay count, stops recurring list adding
             if (currentNode.GetComponent<aPatchBay>().cubeInputs.Count < currentNode.GetComponent<aPatchBay>().subNodes.Count)
             {
+                if (currentNode.GetComponent<aPatchBay>().signalNumbers.Contains(this.signalNumber))
+                {
+
+                }
+                else
+                {
+                    currentNode.GetComponent<aPatchBay>().signalNumbers.Add(this.signalNumber);
+                }
                 //Adding one signal cube to the list
                 currentNode.GetComponent<aPatchBay>().cubeInputs.Add(this.gameObject);
 
@@ -194,9 +222,7 @@ public class SignalFlowObject : MonoBehaviour
                     previousNodeList.Add(previousNode);
 
                     //Adding things to the game manager - win state shit
-                    gameManager.previousNodeList.Add(previousNode);
                     aNode.Type type = previousNode.GetComponent<aNode>().nodeType;
-                    gameManager.previousNodeListTypes.Add(type);
 
                     GameObject currentNodeHolder = currentNode.GetComponent<aPatchBay>().outputs[i];
                     currentNode = currentNodeHolder;
@@ -206,7 +232,7 @@ public class SignalFlowObject : MonoBehaviour
                     patchBayInt = 0;
                     genericInt = 0;
 
-                    currentNode.GetComponent<aPatchBay>().cubeInputs.Remove(this.gameObject);
+                    previousNode.GetComponent<aPatchBay>().cubeInputs.Remove(this.gameObject);
                 }
             }
 
@@ -248,11 +274,13 @@ public class SignalFlowObject : MonoBehaviour
                 if (onDaw)
                 {
                     currentNode.GetComponent<aDAW>().cubeInputs.Remove(this.gameObject);
+                    previousNode.GetComponent<aDAW>().signalNumbers.Remove(this.signalNumber);
                 }
 
                 if (onPatchBay)
                 {
                     currentNode.GetComponent<aPatchBay>().cubeInputs.Remove(this.gameObject);
+                    previousNode.GetComponent<aPatchBay>().signalNumbers.Remove(this.signalNumber);
                 }
                 int index = previousNodeList.Count - 1;
                 int removeIndex = previousNodeList.Count;
@@ -260,6 +288,28 @@ public class SignalFlowObject : MonoBehaviour
                 this.transform.position = currentNode.transform.position;
 
                 previousNodeList.RemoveAt(index);
+            }
+
+            if (previousNode.GetComponent<aNode>().isPowered == false)
+            {
+                if (previousNode.GetComponent<aNode>().nodeType == aNode.Type.ET_DAW)
+                {
+                    previousNode.GetComponent<aDAW>().cubeInputs.Remove(this.gameObject);
+                    previousNode.GetComponent<aDAW>().signalNumbers.Remove(this.signalNumber);
+                }
+
+                if (previousNode.GetComponent<aNode>().nodeType == aNode.Type.ET_PATCHBAY)
+                {
+                    currentNode.GetComponent<aPatchBay>().cubeInputs.Remove(this.gameObject);
+                    previousNode.GetComponent<aPatchBay>().signalNumbers.Remove(this.signalNumber);
+                }
+                int index = previousNodeList.Count - 1;
+                int index2 = previousNodeList.Count - 2;
+                currentNode = previousNodeList[index2];
+                this.transform.position = currentNode.transform.position;
+
+                previousNodeList.RemoveAt(index);
+                previousNodeList.RemoveAt(index2);
             }
         }
     }

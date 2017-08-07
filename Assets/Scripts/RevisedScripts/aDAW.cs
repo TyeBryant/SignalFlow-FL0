@@ -17,9 +17,13 @@ public class aDAW : aNode {
     //[HideInInspector]
     public int selectedIndex;
 
+    public List<int> signalNumbers;
+
     // Update is called once per frame
     void Update()
     {
+        signalNumber = 0;
+
         //Only execute if this is above 0
         if (outputs.Count > 0)
         {

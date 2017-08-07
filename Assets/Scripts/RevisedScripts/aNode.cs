@@ -95,6 +95,11 @@ public class aNode : MonoBehaviour
 
     public GameManager gameManager;
 
+    public int signalNumber;
+
+    public SignalFlowStart[] starting;
+    public List<GameObject> startingNodes;
+
     // Use this for initialization
     public void Start()
     {
@@ -121,11 +126,23 @@ public class aNode : MonoBehaviour
         counter = 0;
 
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+
+        starting = GameObject.FindObjectsOfType<SignalFlowStart>();
+        for (int index = 0; index < starting.Length; index++)
+        {
+            startingNodes.Add(starting[index].gameObject);
+        }
     }
 
     // Update is called once per frame
     public void Update()
     {
+        //Win checking stuff
+        if (isPowered == false)
+        {
+            signalNumber = 0;
+        }
+
         //Making sure signals don't show when there is no power
         if (nodeType != Type.ET_MICROPHONE && isPowered == false)
         {
@@ -175,6 +192,10 @@ public class aNode : MonoBehaviour
         //Used for placing the signal exclusively
         if (Input.GetMouseButtonUp(0))
         {
+            foreach (GameObject startingN in startingNodes)
+            {
+                startingN.GetComponent<SignalFlowStart>().CheckNodes();
+            }
             Debug.Log("Done a thing");
             if (connectionManager.isCarryingSignal && connectionManager.inputFrom != this.gameObject)
             {
@@ -301,9 +322,19 @@ public class aNode : MonoBehaviour
                 signal.GetComponent<SignalFlowObject>().previousNode = this.gameObject;
                 signal.GetComponent<SignalFlowObject>().currentNode = _outputTo;
 
-                gameManager.signalNodes.Add(signal);
+                //gameManager.signalNodes.Add(signal);
 
                 signal.GetComponent<SignalFlowObject>().signalFlowObjectType = this.gameObject.GetComponent<aNode>().signalObject;
+                signal.GetComponent<SignalFlowObject>().signalNumber = this.signalNumber;
+
+                foreach (GameObject start in startingNodes)
+                {
+                    if (start.GetComponent<SignalFlowStart>().signalNumber == signal.GetComponent<SignalFlowObject>().signalNumber)
+                    {
+                        signal.GetComponent<SignalFlowObject>().StartingNode = start;
+                    }
+                }
+
                 _outputTo.GetComponent<aNode>().signalObject = signal.GetComponent<SignalFlowObject>().signalFlowObjectType;
             }
         }

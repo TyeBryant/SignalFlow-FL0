@@ -89,7 +89,10 @@ public class MicStart : MonoBehaviour
                 }
             }
             if (winning)
-                gameManager.win = true;
+            {
+
+            }
+               // gameManager.win = true;
         }
     }
 }

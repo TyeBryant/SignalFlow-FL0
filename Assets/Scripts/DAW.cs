@@ -6,7 +6,6 @@ namespace nodeFunctionality
 {
     public class DAW : Node
     {
-
         public List<Color> signalColours = new List<Color>();
         public List<GameObject> colourPickers = new List<GameObject>();
         public List<Node> subDAWs = new List<Node>();

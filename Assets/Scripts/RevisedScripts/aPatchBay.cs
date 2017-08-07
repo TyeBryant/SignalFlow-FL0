@@ -28,6 +28,10 @@ public class aPatchBay : aNode, IPointerClickHandler {
     float zoomSpeed = 3;
     public int pbCounter;
 
+    public int signalNumber;
+
+    public List<int> signalNumbers;
+
     private new void Start()
     {
         base.Start();
@@ -107,6 +111,14 @@ public class aPatchBay : aNode, IPointerClickHandler {
     }
 
     new void Update() {
+
+        signalNumber = 0;
+
+        //Win checking stuff
+        if (isPowered == false)
+        {
+            signalNumber = 0;
+        }
 
         if (outputs.Count > 0)
             ShowConnections();
