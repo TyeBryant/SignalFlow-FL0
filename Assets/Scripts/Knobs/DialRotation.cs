@@ -35,6 +35,14 @@ namespace Dial
         public bool canRotate = false;
         #endregion
 
+        aConnectionManager connectionManager;
+
+        private void Start()
+        {
+            //Set connection manager
+            connectionManager = FindObjectOfType<aConnectionManager>();
+        }
+
         public void OnPointerDown(PointerEventData eventData)
         {
             canRotate = true;
@@ -70,16 +78,25 @@ namespace Dial
                 return;
             }
 
-            currentVector = eventData.position - (Vector2)transform.position;
+            /*currentVector = eventData.position - (Vector2)transform.position;
             currentAngle = Mathf.Atan2(currentVector.y, currentVector.x) * Mathf.Rad2Deg;
 
             Quaternion addRotation = Quaternion.AngleAxis(currentAngle - initialAngle, this.transform.forward);
             addRotation.eulerAngles = new Vector3(0, 0, (addRotation.eulerAngles.z * 20));
 
-            Quaternion finalRotation = initialRotation * addRotation;
+            Quaternion finalRotation = initialRotation * addRotation;*/
+
+            Vector3 relative = connectionManager.mousePointer.transform.position - transform.position;
+            float angle = (Mathf.Atan2(relative.x, relative.y) * Mathf.Rad2Deg);
+
+            if (angle < 0)
+                angle += 360.0f;
+
+            print(angle);
 
             //Times this value by 100 to get a percentage hehe
-            dialValue = 1 - (finalRotation.eulerAngles.z / 360f);
+            dialValue = 1 - (angle/ 360f);
+            //print(dialValue);
 
             //Prevent overrotation
             if (Mathf.Abs(dialValue - previousValue) > 0.5f)
@@ -123,8 +140,7 @@ namespace Dial
                     return;
                 }
             }
-
-            transform.rotation = finalRotation;
+            transform.localEulerAngles = new Vector3(0,0,-angle);
             previousValue = dialValue;
         }
     }

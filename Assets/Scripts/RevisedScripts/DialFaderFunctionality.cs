@@ -22,9 +22,14 @@ public class DialFaderFunctionality : MonoBehaviour
 
     private GameObject thisObject;
 
+    //Reference to connection manager to cursor
+    aConnectionManager connectionManager;
+
     // Use this for initialization
     void Start ()
     {
+        //Get connection manager
+        connectionManager = FindObjectOfType<aConnectionManager>();        
         gameManager = GameObject.FindGameObjectWithTag("GameManager");
 
         thisObject = this.gameObject;
