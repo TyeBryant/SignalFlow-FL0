@@ -318,16 +318,16 @@ public class aNode : MonoBehaviour
             else
                 lineRend.SetPositions(new Vector3[] { transform.position, _outputTo.transform.position });
 
-            if (outputs.Count > 1)
+            if (outputs.Count > 1 && this.gameObject.GetComponent<aNode>().nodeType != Type.ET_DAW && this.gameObject.GetComponent<aNode>().nodeType != Type.ET_PATCHBAY)
             {
                 GameObject signal = Instantiate(signalFlowHolder, _outputTo.transform.position, _outputTo.transform.rotation);
                 signal.GetComponent<SignalFlowObject>().previousNode = this.gameObject;
+                signal.GetComponent<SignalFlowObject>().previousNodeList.Add(this.gameObject);
                 signal.GetComponent<SignalFlowObject>().currentNode = _outputTo;
-
-                //gameManager.signalNodes.Add(signal);
 
                 signal.GetComponent<SignalFlowObject>().signalFlowObjectType = this.gameObject.GetComponent<aNode>().signalObject;
                 signal.GetComponent<SignalFlowObject>().signalNumber = this.signalNumber;
+
 
                 foreach (GameObject start in startingNodes)
                 {
@@ -339,6 +339,9 @@ public class aNode : MonoBehaviour
 
                 _outputTo.GetComponent<aNode>().signalObject = signal.GetComponent<SignalFlowObject>().signalFlowObjectType;
             }
+
+            
+
         }
     }
 }

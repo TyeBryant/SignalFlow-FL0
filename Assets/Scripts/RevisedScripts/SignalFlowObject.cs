@@ -6,17 +6,17 @@ using UnityEngine;
 public class SignalFlowObject : MonoBehaviour
 {
     //The current node that the signal is on
-    [HideInInspector]
+    //[HideInInspector]
     public GameObject currentNode;
 
     //The node that the signal came from
-    [HideInInspector]
+    //[HideInInspector]
     public GameObject previousNode;
 
     //The movement that the signal has to perform to get on the current node
     public Transform nodePoweredTransform;
 
-    [HideInInspector]
+    //[HideInInspector]
     public List<GameObject> previousNodeList;
 
     public GameObject signalFlowObjectType;
@@ -55,6 +55,8 @@ public class SignalFlowObject : MonoBehaviour
     public bool countCheck;
 
     public int signalNumber;
+
+    public List<GameObject> deleteList;
 
     // Use this for initialization
     void Start()
@@ -103,7 +105,7 @@ public class SignalFlowObject : MonoBehaviour
         }
 
         // ---- For single-input/potential multi-output nodes ---- //
-        if (currentNode.GetComponent<aNode>().outputs.Count != 0 && onDaw == false && onPatchBay == false)
+        if (currentNode.GetComponent<aNode>().outputs.Count != 0 && onDaw == false && onPatchBay == false && currentNode.GetComponent<aNode>().outputs[0].GetComponent<aNode>().signalNumber == 0)
         {
             //Make the positions the first index of the output list
             //More outputs can instantiate a signal instead
@@ -301,26 +303,65 @@ public class SignalFlowObject : MonoBehaviour
                 previousNodeList.RemoveAt(index);
             }
 
-            if (previousNode.GetComponent<aNode>().isPowered == false)
-            {
-                if (previousNode.GetComponent<aNode>().nodeType == aNode.Type.ET_DAW)
-                {
-                    previousNode.GetComponent<aDAW>().cubeInputs.Remove(this.gameObject);
-                    previousNode.GetComponent<aDAW>().signalNumbers.Remove(this.signalNumber);
-                }
+            //    if (previousNode.GetComponent<aNode>().isPowered == false)
+            //    {
+            //        if (previousNode.GetComponent<aNode>().nodeType == aNode.Type.ET_DAW)
+            //        {
+            //            previousNode.GetComponent<aDAW>().cubeInputs.Remove(this.gameObject);
+            //            previousNode.GetComponent<aDAW>().signalNumbers.Remove(this.signalNumber);
+            //        }
 
-                if (previousNode.GetComponent<aNode>().nodeType == aNode.Type.ET_PATCHBAY)
-                {
-                    currentNode.GetComponent<aPatchBay>().cubeInputs.Remove(this.gameObject);
-                    previousNode.GetComponent<aPatchBay>().signalNumbers.Remove(this.signalNumber);
-                }
-                int index = previousNodeList.Count - 1;
-                int index2 = previousNodeList.Count - 2;
-                currentNode = previousNodeList[index2];
+            //        if (previousNode.GetComponent<aNode>().nodeType == aNode.Type.ET_PATCHBAY)
+            //        {
+            //            currentNode.GetComponent<aPatchBay>().cubeInputs.Remove(this.gameObject);
+            //            previousNode.GetComponent<aPatchBay>().signalNumbers.Remove(this.signalNumber);
+            //        }
+            //        int index = previousNodeList.Count - 1;
+            //        int index2 = previousNodeList.Count - 2;
+            //        currentNode = previousNodeList[index2];
+            //        this.transform.position = currentNode.transform.position;
+
+            //        previousNodeList.RemoveAt(index);
+            //        previousNodeList.RemoveAt(index2);
+            //    }
+        }
+
+            for (int index = 0; index < previousNodeList.Count; index++)
+        {
+            if (previousNodeList[index].GetComponent<aNode>().isPowered == false)
+            {
+                GameObject transform = previousNodeList[index - 1];
+                currentNode = transform;
                 this.transform.position = currentNode.transform.position;
 
-                previousNodeList.RemoveAt(index);
-                previousNodeList.RemoveAt(index2);
+                for (int i = index - 1; i < previousNodeList.Count; i++)
+                {
+                    int count = previousNodeList.Count - (index - 1);
+                    if (deleteList.Count < count)
+                    {
+                        deleteList.Add(previousNodeList[i]);
+                    }
+                }
+
+                for (int j = 0; j < deleteList.Count; j++)
+                {
+                    if (previousNodeList.Contains(deleteList[j]))
+                    {
+                        if (deleteList[j].GetComponent<aNode>().nodeType == aNode.Type.ET_DAW)
+                        {
+                            deleteList[j].GetComponent<aDAW>().cubeInputs.Remove(this.gameObject);
+                            deleteList[j].GetComponent<aDAW>().signalNumbers.Remove(this.signalNumber);
+                        }
+
+                        if (deleteList[j].GetComponent<aNode>().nodeType == aNode.Type.ET_PATCHBAY)
+                        {
+                            deleteList[j].GetComponent<aPatchBay>().cubeInputs.Remove(this.gameObject);
+                            previousNode.GetComponent<aPatchBay>().signalNumbers.Remove(this.signalNumber);
+                        }
+                        previousNodeList.Remove(deleteList[j]);
+                    }
+                }
+                deleteList.Clear();
             }
         }
     }
