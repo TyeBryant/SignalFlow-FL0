@@ -340,8 +340,89 @@ public class aNode : MonoBehaviour
                 _outputTo.GetComponent<aNode>().signalObject = signal.GetComponent<SignalFlowObject>().signalFlowObjectType;
             }
 
-            
+            if (this.gameObject.GetComponent<aNode>().nodeType == Type.ET_DAW)
+            {
+                if (outputs.Count > 1)
+                {
+                    if (this.gameObject.GetComponent<aDAW>().signalObjs.Contains(inputs[this.gameObject.GetComponent<aDAW>().selectedIndex].GetComponent<aNode>().signalObject))
+                    {
+                        GameObject signal = Instantiate(signalFlowHolder, _outputTo.transform.position, _outputTo.transform.rotation);
+                        signal.GetComponent<SignalFlowObject>().previousNode = this.gameObject;
+                        signal.GetComponent<SignalFlowObject>().previousNodeList.Add(this.gameObject);
+                        signal.GetComponent<SignalFlowObject>().currentNode = _outputTo;
 
+                        signal.GetComponent<SignalFlowObject>().signalFlowObjectType = this.gameObject.GetComponent<aNode>().signalObject;
+                        signal.GetComponent<SignalFlowObject>().signalNumber = gameObject.GetComponent<aDAW>().signalNumbers[this.gameObject.GetComponent<aDAW>().selectedIndex];
+
+
+                        foreach (GameObject start in startingNodes)
+                        {
+                            if (start.GetComponent<SignalFlowStart>().signalNumber == signal.GetComponent<SignalFlowObject>().signalNumber)
+                            {
+                                signal.GetComponent<SignalFlowObject>().StartingNode = start;
+                            }
+                        }
+
+                        _outputTo.GetComponent<aNode>().signalObject = signal.GetComponent<SignalFlowObject>().signalFlowObjectType;
+                    }
+                }
+            }
+
+            if (this.gameObject.GetComponent<aNode>().nodeType == Type.ET_PATCHBAY)
+            {
+                if (outputs.Count > 1)
+                {
+                    if (this.gameObject.GetComponent<aPatchBay>().signalObjs.Contains(inputs[this.gameObject.GetComponent<aPatchBay>().selectedIndex].GetComponent<aNode>().signalObject))
+                    {
+                        GameObject signal = Instantiate(signalFlowHolder, _outputTo.transform.position, _outputTo.transform.rotation);
+                        signal.GetComponent<SignalFlowObject>().previousNode = this.gameObject;
+                        signal.GetComponent<SignalFlowObject>().previousNodeList.Add(this.gameObject);
+                        signal.GetComponent<SignalFlowObject>().currentNode = _outputTo;
+
+                        signal.GetComponent<SignalFlowObject>().signalFlowObjectType = this.gameObject.GetComponent<aNode>().signalObject;
+                        signal.GetComponent<SignalFlowObject>().signalNumber = gameObject.GetComponent<aPatchBay>().signalNumbers[this.gameObject.GetComponent<aPatchBay>().selectedIndex];
+
+
+                        foreach (GameObject start in startingNodes)
+                        {
+                            if (start.GetComponent<SignalFlowStart>().signalNumber == signal.GetComponent<SignalFlowObject>().signalNumber)
+                            {
+                                signal.GetComponent<SignalFlowObject>().StartingNode = start;
+                            }
+                        }
+
+                        _outputTo.GetComponent<aNode>().signalObject = signal.GetComponent<SignalFlowObject>().signalFlowObjectType;
+                    }
+                }
+            }
         }
     }
 }
+
+
+
+//                     if (outputs[index].GetComponent<aNode>().signalNumber == outputs[index].GetComponent<aNode>().signalNumber)
+//                        {
+//                            List<int> num = new List<int>();
+//num.Add(outputs[index].GetComponent<aNode>().signalNumber);
+//                            Debug.Log(num.Count);
+//                            if (num.Count > 1)
+//                            {
+//                                GameObject signal = Instantiate(signalFlowHolder, _outputTo.transform.position, _outputTo.transform.rotation);
+//signal.GetComponent<SignalFlowObject>().previousNode = this.gameObject;
+
+//signal.GetComponent<SignalFlowObject>().previousNodeList.Add(this.gameObject);
+//signal.GetComponent<SignalFlowObject>().currentNode = _outputTo;
+
+//signal.GetComponent<SignalFlowObject>().signalFlowObjectType = this.gameObject.GetComponent<aNode>().signalObject;
+//signal.GetComponent<SignalFlowObject>().signalNumber = outputs [index].GetComponent<aNode>().signalNumber;
+
+//                                foreach (GameObject start in startingNodes)
+//                                {
+//    if (start.GetComponent<SignalFlowStart>().signalNumber == signal.GetComponent<SignalFlowObject>().signalNumber)
+//    {
+//        signal.GetComponent<SignalFlowObject>().StartingNode = start;
+//    }
+//}
+//}
+//                        }
