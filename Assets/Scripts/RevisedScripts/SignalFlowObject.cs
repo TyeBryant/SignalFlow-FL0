@@ -150,42 +150,45 @@ public class SignalFlowObject : MonoBehaviour
         }
         if (dawReady == true)
         {
-            //If the selected index is the one that you choose
-            if (currentNode.GetComponent<aDAW>().selectedIndex == dawInt)
+            if (currentNode.GetComponent<aDAW>())
             {
-                if (countCheck == false)
+                //If the selected index is the one that you choose
+                if (currentNode.GetComponent<aDAW>().selectedIndex == dawInt)
                 {
-                    genericInt = currentNode.GetComponent<aDAW>().outputs.Count;
-                    countCheck = true;
+                    if (countCheck == false)
+                    {
+                        genericInt = currentNode.GetComponent<aDAW>().outputs.Count;
+                        countCheck = true;
+                    }
+
+                    if (genericInt < currentNode.GetComponent<aDAW>().outputs.Count && countCheck == true)
+                    {
+                        int i = currentNode.GetComponent<aDAW>().outputs.Count - 1;
+                        this.transform.position = currentNode.GetComponent<aDAW>().outputs[i].transform.position;
+
+                        previousNode = currentNode;
+                        previousNodeList.Add(previousNode);
+
+                        //Adding things to the game manager - win state shit
+                        aNode.Type type = previousNode.GetComponent<aNode>().nodeType;
+
+                        GameObject currentNodeHolder = currentNode.GetComponent<aDAW>().outputs[i];
+                        currentNode = currentNodeHolder;
+
+                        onDaw = false;
+                        dawReady = false;
+                        countCheck = false;
+                        dawInt = 0;
+                        genericInt = 0;
+
+                        previousNode.GetComponent<aDAW>().cubeInputs.Remove(this.gameObject);
+                    }
                 }
-
-                if (genericInt < currentNode.GetComponent<aDAW>().outputs.Count && countCheck == true)
+                if (currentNode.GetComponent<aDAW>().selectedIndex != dawInt)
                 {
-                    int i = currentNode.GetComponent<aDAW>().outputs.Count - 1;
-                    this.transform.position = currentNode.GetComponent<aDAW>().outputs[i].transform.position;
-
-                    previousNode = currentNode;
-                    previousNodeList.Add(previousNode);
-
-                    //Adding things to the game manager - win state shit
-                    aNode.Type type = previousNode.GetComponent<aNode>().nodeType;
-
-                    GameObject currentNodeHolder = currentNode.GetComponent<aDAW>().outputs[i];
-                    currentNode = currentNodeHolder;
-
-                    onDaw = false;
-                    dawReady = false;
                     countCheck = false;
-                    dawInt = 0;
                     genericInt = 0;
-
-                    previousNode.GetComponent<aDAW>().cubeInputs.Remove(this.gameObject);
                 }
-            }
-            if (currentNode.GetComponent<aDAW>().selectedIndex != dawInt)
-            {
-                countCheck = false;
-                genericInt = 0;
             }
         }
 
