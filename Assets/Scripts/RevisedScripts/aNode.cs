@@ -37,6 +37,7 @@ public class aNode : MonoBehaviour
         ET_MONITOR,
         ET_HEADPHONES,
         ET_HEADPHONEAMP,
+        ET_HEADPHONESECTION,
         ET_OTHERPATCHBAYNODES,
         ET_OUTPUT,
         ET_INPUT,
