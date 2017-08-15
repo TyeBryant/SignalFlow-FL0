@@ -166,8 +166,13 @@ public class aNode : MonoBehaviour
                 {
                     counter = 0;
                     GameObject tri1 = Instantiate(signalObject, this.gameObject.transform.position, Quaternion.identity);
-                    tri1.GetComponent<LineShape>().positionA = connectionRenderers[index].GetComponent<LineRenderer>().GetPosition(0);
-                    tri1.GetComponent<LineShape>().positionB = connectionRenderers[index].GetComponent<LineRenderer>().GetPosition(1);
+
+                    if(tri1 != null && tri1.GetComponent<LineShape>())
+                    {
+                        tri1.GetComponent<LineShape>().positionA = connectionRenderers[index].GetComponent<LineRenderer>().GetPosition(0);
+                        tri1.GetComponent<LineShape>().positionB = connectionRenderers[index].GetComponent<LineRenderer>().GetPosition(1);
+                    }
+
                 }
             }
         }

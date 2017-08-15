@@ -73,27 +73,31 @@ public class SignalFlowStart : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        if (signalObject.GetComponent<SignalFlowObject>().currentNode.GetComponent<aNode>().nodeType == aNode.Type.ET_PATCHBAY)
+        if(signalObject != null)
         {
-            CheckWin();
-        }
-        else if (winChecked == true && signalObject.GetComponent<SignalFlowObject>().currentNode.GetComponent<aNode>().nodeType != aNode.Type.ET_PATCHBAY)
-        {
-            winChecked = false;
-            gameManager.winCount -= 1;
+            if (signalObject.GetComponent<SignalFlowObject>().currentNode.GetComponent<aNode>().nodeType == aNode.Type.ET_PATCHBAY)
+            {
+                CheckWin();
+            }
+            else if (winChecked == true && signalObject.GetComponent<SignalFlowObject>().currentNode.GetComponent<aNode>().nodeType != aNode.Type.ET_PATCHBAY)
+            {
+                winChecked = false;
+                gameManager.winCount -= 1;
+            }
+
+            if (previousNodeList.Contains(DAW) && !DAW.GetComponent<aDAW>().signalNumbers.Contains(signalNumber))
+            {
+                previousNodeList.Remove(DAW);
+                previousNodeListTypes.Remove(DAW.GetComponent<aNode>().nodeType);
+            }
+
+            if (previousNodeList.Contains(PatchBay) && !PatchBay.GetComponent<aPatchBay>().signalNumbers.Contains(signalNumber))
+            {
+                previousNodeList.Remove(PatchBay);
+                previousNodeListTypes.Remove(PatchBay.GetComponent<aNode>().nodeType);
+            }
         }
 
-        if (previousNodeList.Contains(DAW) && !DAW.GetComponent<aDAW>().signalNumbers.Contains(signalNumber))
-        {
-            previousNodeList.Remove(DAW);
-            previousNodeListTypes.Remove(DAW.GetComponent<aNode>().nodeType);
-        }
-
-        if (previousNodeList.Contains(PatchBay) && !PatchBay.GetComponent<aPatchBay>().signalNumbers.Contains(signalNumber))
-        {
-            previousNodeList.Remove(PatchBay);
-            previousNodeListTypes.Remove(PatchBay.GetComponent<aNode>().nodeType);
-        }
     }
 
     public void CheckNodes()
@@ -102,11 +106,7 @@ public class SignalFlowStart : MonoBehaviour
         {
             if (nodeObjects[index].GetComponent<aNode>().signalNumber == signalNumber)
             {
-                if (previousNodeList.Contains(nodeObjects[index]))
-                {
-                    //Do nothing
-                }
-                else
+                if (!previousNodeList.Contains(nodeObjects[index]))
                 {
                     previousNodeList.Add(nodeObjects[index]);
                     previousNodeListTypes.Add(nodeObjects[index].GetComponent<aNode>().nodeType);

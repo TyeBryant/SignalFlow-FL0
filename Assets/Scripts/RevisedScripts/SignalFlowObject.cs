@@ -129,11 +129,7 @@ public class SignalFlowObject : MonoBehaviour
             //If the cube input number is less that subDaw count, stops recurring list adding
             if (currentNode.GetComponent<aDAW>().cubeInputs.Count < currentNode.GetComponent<aDAW>().subDaws.Count)
             {
-                if (currentNode.GetComponent<aDAW>().signalNumbers.Contains(this.signalNumber))
-                {
-
-                }
-                else
+                if (!currentNode.GetComponent<aDAW>().signalNumbers.Contains(this.signalNumber))
                 {
                     currentNode.GetComponent<aDAW>().signalNumbers.Add(this.signalNumber);
                 }
@@ -198,11 +194,7 @@ public class SignalFlowObject : MonoBehaviour
             //If the cube input number is less than mini patchBay count, stops recurring list adding
             if (currentNode.GetComponent<aPatchBay>().cubeInputs.Count < currentNode.GetComponent<aPatchBay>().subNodes.Count)
             {
-                if (currentNode.GetComponent<aPatchBay>().signalNumbers.Contains(this.signalNumber))
-                {
-
-                }
-                else
+                if (!currentNode.GetComponent<aPatchBay>().signalNumbers.Contains(this.signalNumber))
                 {
                     currentNode.GetComponent<aPatchBay>().signalNumbers.Add(this.signalNumber);
                 }
@@ -252,11 +244,15 @@ public class SignalFlowObject : MonoBehaviour
                 }
             }
 
-            if (currentNode.GetComponent<aPatchBay>().selectedIndex != patchBayInt)
+            if (currentNode.GetComponent<aPatchBay>())
             {
-                countCheck = false;
-                genericInt = 0;
+                if (currentNode.GetComponent<aPatchBay>().selectedIndex != patchBayInt)
+                {
+                    countCheck = false;
+                    genericInt = 0;
+                }
             }
+
         }
 
         //If list is empty and current node doesn't equal mic (start), kill yourself
@@ -295,8 +291,12 @@ public class SignalFlowObject : MonoBehaviour
 
                 if (onPatchBay)
                 {
-                    currentNode.GetComponent<aPatchBay>().cubeInputs.Remove(this.gameObject);
-                    previousNode.GetComponent<aPatchBay>().signalNumbers.Remove(this.signalNumber);
+                    if (currentNode != null && previousNode != null)
+                    {
+                        currentNode.GetComponent<aPatchBay>().cubeInputs.Remove(this.gameObject);
+                        previousNode.GetComponent<aPatchBay>().signalNumbers.Remove(this.signalNumber);
+                    }
+
                 }
                 int index = previousNodeList.Count - 1;
                 int removeIndex = previousNodeList.Count;
