@@ -158,12 +158,12 @@ public class aNode : MonoBehaviour
             ShowConnections();
         }
 
-        if (connectionRenderers != null)
+        if (connectionRenderers != null && signalObject != null)
         {
             for (int index = 0; index < connectionRenderers.Count; index++)
             {
                 counter += Time.deltaTime;
-                if (counter > 0.5f)
+                if (counter > 0.5f && connectionRenderers[index] != null)
                 {
                     counter = 0;
                     GameObject tri1 = Instantiate(signalObject, this.gameObject.transform.position, Quaternion.identity);
