@@ -96,7 +96,7 @@ public class aNode : MonoBehaviour
 
     public GameManager gameManager;
 
-    public int signalNumber;
+    public int nodeSignalNumber;
 
     [HideInInspector]
     public SignalFlowStart[] starting;
@@ -146,7 +146,7 @@ public class aNode : MonoBehaviour
         //Win checking stuff
         if (isPowered == false)
         {
-            signalNumber = 0;
+            nodeSignalNumber = 0;
         }
 
         //Making sure signals don't show when there is no power
@@ -351,12 +351,12 @@ public class aNode : MonoBehaviour
                 signal.GetComponent<SignalFlowObject>().currentNode = _outputTo;
 
                 signal.GetComponent<SignalFlowObject>().signalFlowObjectType = this.gameObject.GetComponent<aNode>().signalObject;
-                signal.GetComponent<SignalFlowObject>().signalNumber = this.signalNumber;
+                signal.GetComponent<SignalFlowObject>().objectSignalNumber = this.nodeSignalNumber;
 
 
                 foreach (GameObject start in startingNodes)
                 {
-                    if (start.GetComponent<SignalFlowStart>().signalNumber == signal.GetComponent<SignalFlowObject>().signalNumber)
+                    if (start.GetComponent<SignalFlowStart>().signalNumber == signal.GetComponent<SignalFlowObject>().objectSignalNumber)
                     {
                         signal.GetComponent<SignalFlowObject>().StartingNode = start;
                     }
@@ -377,12 +377,12 @@ public class aNode : MonoBehaviour
                         signal.GetComponent<SignalFlowObject>().currentNode = _outputTo;
 
                         signal.GetComponent<SignalFlowObject>().signalFlowObjectType = this.gameObject.GetComponent<aNode>().signalObject;
-                        signal.GetComponent<SignalFlowObject>().signalNumber = gameObject.GetComponent<aDAW>().signalNumbers[this.gameObject.GetComponent<aDAW>().selectedIndex];
+                        signal.GetComponent<SignalFlowObject>().objectSignalNumber = gameObject.GetComponent<aDAW>().signalNumbers[this.gameObject.GetComponent<aDAW>().selectedIndex];
 
 
                         foreach (GameObject start in startingNodes)
                         {
-                            if (start.GetComponent<SignalFlowStart>().signalNumber == signal.GetComponent<SignalFlowObject>().signalNumber)
+                            if (start.GetComponent<SignalFlowStart>().signalNumber == signal.GetComponent<SignalFlowObject>().objectSignalNumber)
                             {
                                 signal.GetComponent<SignalFlowObject>().StartingNode = start;
                             }
@@ -405,12 +405,12 @@ public class aNode : MonoBehaviour
                         signal.GetComponent<SignalFlowObject>().currentNode = _outputTo;
 
                         signal.GetComponent<SignalFlowObject>().signalFlowObjectType = this.gameObject.GetComponent<aNode>().signalObject;
-                        signal.GetComponent<SignalFlowObject>().signalNumber = gameObject.GetComponent<aPatchBay>().signalNumbers[this.gameObject.GetComponent<aPatchBay>().selectedIndex];
+                        signal.GetComponent<SignalFlowObject>().objectSignalNumber = gameObject.GetComponent<aPatchBay>().signalNumbers[this.gameObject.GetComponent<aPatchBay>().selectedIndex];
 
 
                         foreach (GameObject start in startingNodes)
                         {
-                            if (start.GetComponent<SignalFlowStart>().signalNumber == signal.GetComponent<SignalFlowObject>().signalNumber)
+                            if (start.GetComponent<SignalFlowStart>().signalNumber == signal.GetComponent<SignalFlowObject>().objectSignalNumber)
                             {
                                 signal.GetComponent<SignalFlowObject>().StartingNode = start;
                             }
