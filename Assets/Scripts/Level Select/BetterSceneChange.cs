@@ -18,7 +18,7 @@ public class BetterSceneChange : MonoBehaviour {
 	}
     public void LevelSelect()
     {
-        AudioManager.Instance.PlayClip(levelSelectSound, AudioManager.Instance.GetChannel("SFX"));
+       // AudioManager.Instance.PlayClip(levelSelectSound, AudioManager.Instance.GetChannel("SFX"));
         SceneManager.LoadScene(LevelName);
     }
 }
