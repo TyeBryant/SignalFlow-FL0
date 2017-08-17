@@ -56,10 +56,10 @@ public class LineRendCol : MonoBehaviour
     //}
     
     //Manage Disconnecting
-<<<<<<< HEAD
+
     //void Disconnect()
     //{
-=======
+
     void Disconnect()
     {
         Debug.Log("Disconnected.");
@@ -67,7 +67,7 @@ public class LineRendCol : MonoBehaviour
 
         node.outputs.Remove(outNode);
         aNode s = outNode.GetComponent<aNode>();
->>>>>>> origin/master
+
 
     //    node.outputs.Remove(outNode);
     //    aNode s = outNode.GetComponent<aNode>();
@@ -93,5 +93,5 @@ public class LineRendCol : MonoBehaviour
     //            s.isPowered = false;
     //    }
 
-    //}
+    }
 }
