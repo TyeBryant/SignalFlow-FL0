@@ -134,10 +134,12 @@ public class aPatchBay : aNode, IPointerClickHandler {
         if (outputs.Count > 0)
             ShowConnections();
 
-        if (connectionRenderers != null) {
+        if (connectionRenderers != null && signalObject != null && sendingSignal)
+        {
             for (int index = 0; index < connectionRenderers.Count; ++index) {
                 counter += Time.deltaTime;
-                if (counter > 0.5f && signalObjs.Count > 0) {
+                if (counter > 0.5f && signalObjs.Count > 0 && connectionRenderers[index] != null)
+                {
                     counter = 0;
 
                     signalObject = signalObjs[index];
