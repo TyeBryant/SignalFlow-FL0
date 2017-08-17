@@ -75,11 +75,11 @@ public class SignalFlowStart : MonoBehaviour
     {
         if(signalObject != null)
         {
-            if (signalObject.GetComponent<SignalFlowObject>().currentNode.GetComponent<aNode>().nodeType == aNode.Type.ET_PATCHBAY)
+            if (signalObject.GetComponent<SignalFlowObject>().currentNode.GetComponent<aNode>().nodeType == aNode.Type.ET_MONITOR || signalObject.GetComponent<SignalFlowObject>().currentNode.GetComponent<aNode>().nodeType == aNode.Type.ET_HEADPHONES)
             {
                 CheckWin();
             }
-            else if (winChecked == true && signalObject.GetComponent<SignalFlowObject>().currentNode.GetComponent<aNode>().nodeType != aNode.Type.ET_PATCHBAY)
+            else if (winChecked == true && signalObject.GetComponent<SignalFlowObject>().currentNode.GetComponent<aNode>().nodeType != aNode.Type.ET_MONITOR || winChecked == true && signalObject.GetComponent<SignalFlowObject>().currentNode.GetComponent<aNode>().nodeType != aNode.Type.ET_HEADPHONES)
             {
                 winChecked = false;
                 gameManager.winCount -= 1;

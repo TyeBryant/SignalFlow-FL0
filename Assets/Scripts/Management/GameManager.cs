@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using nodeFunctionality;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace gameManagement
 {
@@ -20,6 +21,8 @@ namespace gameManagement
         public int winCount;
 
         public bool levelWin;
+        public string LevelName;
+        public AudioClip levelWinSound;
 
         // Use this for initialization
         void Start()
@@ -38,6 +41,17 @@ namespace gameManagement
             {
                 levelWin = true;
             }
+            if (levelWin == true)
+            {
+                StartCoroutine(LoadNextLevel());
+            }
+        }
+
+        IEnumerator LoadNextLevel()
+        {
+            AudioManager.Instance.PlayClip(levelWinSound, AudioManager.Instance.GetChannel("SFX"));
+            yield return new WaitForSeconds(2);
+            SceneManager.LoadScene(LevelName);
         }
     }
 }

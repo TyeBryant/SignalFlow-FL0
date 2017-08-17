@@ -39,6 +39,8 @@ public class LineRendCol : MonoBehaviour
             endPoint = conMan.mousePointer.transform.position;
             lineRend.SetPosition(1, endPoint);
         }
+
+
     }
 
     void OnMouseOver()
@@ -58,6 +60,8 @@ public class LineRendCol : MonoBehaviour
     {
         node.outputs.Remove(outNode);
         aNode s = outNode.GetComponent<aNode>();
+
+        s.sendingSignal = false;
         if (!s.GetComponent<aDAW>())
         {
             //Make sure s is not powered anymore            

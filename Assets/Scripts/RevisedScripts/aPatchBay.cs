@@ -22,6 +22,10 @@ public class aPatchBay : aNode, IPointerClickHandler {
     List<GameObject> activeInNodes = new List<GameObject>();
     List<GameObject> activeOuNodes = new List<GameObject>();
 
+    // Patchbay Click Sound Effects.
+    public AudioClip patchBaySingleClick;
+    public AudioClip patchBayDoubleClick;
+
     public int selectedIndex;
 
     public bool zoomed, zooming;
@@ -50,6 +54,9 @@ public class aPatchBay : aNode, IPointerClickHandler {
             zooming = true;
             zoomed = true;
 
+            Debug.Log("Double Click");
+            AudioManager.Instance.PlayClip(patchBayDoubleClick, AudioManager.Instance.GetChannel("SFX"));
+
             for (int index = 0; index < inputs.Count; ++index) {
                 inputNodes[index].SetActive(true);
                 inputNodes[index].GetComponent<aNode>().inputs.Add(inputs[index]);
@@ -61,6 +68,10 @@ public class aPatchBay : aNode, IPointerClickHandler {
             GetComponent<CircleCollider2D>().enabled = false;
         }
         else if (eventData.clickCount < 2 && !zoomed) {
+
+            Debug.Log("Single Click");
+            AudioManager.Instance.PlayClip(patchBaySingleClick, AudioManager.Instance.GetChannel("SFX"));
+
             // Show Outputs
             if (outputNodes[0].activeSelf)
                 foreach (GameObject node in outputNodes)
