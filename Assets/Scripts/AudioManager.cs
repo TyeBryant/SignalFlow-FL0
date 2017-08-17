@@ -24,8 +24,11 @@ public class AudioManager : MonoBehaviour {
     public static AudioManager _Instance;
     public static AudioManager Instance {
         get {
-            if (_Instance == null)
+            if (_Instance != null) {
+            }
+            else {
                 _Instance = new AudioManager();
+            }
             return _Instance;
         }
     }
@@ -45,11 +48,12 @@ public class AudioManager : MonoBehaviour {
         return null;
     }
 
-    public void PlayClip(AudioClip clip, AudioChannel channel, float volume = 1, bool loop = false) {
-        gameObject.AddComponent<AudioSource>();
-        AudioSource source = GetComponent<AudioSource>(); 
+    public void PlayClip(AudioClip clip, AudioChannel channel, float volume = 1, bool loop = false)
+    {
+        this.gameObject.AddComponent<AudioSource>();
+        AudioSource source = this.gameObject.GetComponent<AudioSource>();
         channel.Add(source);
-        Debug.Log(channel.name +  clip.name + source.name);
+        Debug.Log(channel.name + clip.name + source.name);
         source.clip = clip;
         source.loop = loop;
         source.volume = masterVolume * volume * channel.volume;
@@ -58,8 +62,13 @@ public class AudioManager : MonoBehaviour {
             Destroy(source, clip.length);
     }
 
-	// Use this for initialization
-	void Start () {
+    private void Awake()
+    {
+        _Instance = this;
+    }
+
+    // Use this for initialization
+    void Start () {
         DontDestroyOnLoad(gameObject);
         CreateChannel("SFX");
         CreateChannel("Music");

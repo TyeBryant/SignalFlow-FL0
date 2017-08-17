@@ -62,6 +62,12 @@ public class aNode : MonoBehaviour
         EC_MULTI
     }
 
+    IEnumerator Destroy()
+    {
+        yield return new WaitForSeconds(5);
+
+    }
+
     [Tooltip("Determines the type of this node")]
     public Type nodeType;
 
@@ -101,6 +107,9 @@ public class aNode : MonoBehaviour
     public SignalFlowStart[] starting;
     [HideInInspector]
     public List<GameObject> startingNodes;
+
+    // Node Sounds AudioClip.
+    public AudioClip selectedAudioClip;
 
     // Use this for initialization
     public void Start()
@@ -176,6 +185,11 @@ public class aNode : MonoBehaviour
                 }
             }
         }
+    }
+
+    void OnMouseDown()
+    {
+        AudioManager.Instance.PlayClip(selectedAudioClip, AudioManager.Instance.GetChannel("SFX"));
     }
 
     //When the sprite has been moused over
