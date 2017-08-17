@@ -32,7 +32,7 @@ public class aPatchBay : aNode, IPointerClickHandler {
     float zoomSpeed = 3;
     public int pbCounter;
 
-    public new int signalNumber;
+    public new int nodeSignalNumber;
 
     public List<int> signalNumbers;
 
@@ -123,12 +123,12 @@ public class aPatchBay : aNode, IPointerClickHandler {
 
     new void Update() {
 
-        signalNumber = 0;
+        nodeSignalNumber = 0;
 
         //Win checking stuff
         if (isPowered == false)
         {
-            signalNumber = 0;
+            nodeSignalNumber = 0;
         }
 
         if (outputs.Count > 0)

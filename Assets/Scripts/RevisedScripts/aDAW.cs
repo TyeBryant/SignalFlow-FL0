@@ -22,7 +22,7 @@ public class aDAW : aNode {
     // Update is called once per frame
     void Update()
     {
-        signalNumber = 0;
+        nodeSignalNumber = 0;
 
         //Only execute if this is above 0
         if (outputs.Count > 0)
