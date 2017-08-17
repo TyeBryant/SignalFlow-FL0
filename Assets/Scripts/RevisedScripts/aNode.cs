@@ -102,7 +102,7 @@ public class aNode : MonoBehaviour
 
     public GameManager gameManager;
 
-    public int nodeSignalNumber;
+    public int nodeSignalNumber, prevNodeSignalNumber;
 
     [HideInInspector]
     public SignalFlowStart[] starting;
@@ -165,10 +165,20 @@ public class aNode : MonoBehaviour
             }
         }
 
-        //Win checking stuff
-        if (isPowered == false)
+        if (sendingSignal == true)
         {
-            nodeSignalNumber = 0;
+            if (inputs.Count == 1 && inputs[0].GetComponent<aNode>().sendingSignal == false)
+            {
+                sendingSignal = false;
+            }
+        }
+
+        if (sendingSignal == false)
+        {
+            if (inputs.Count == 1 && inputs[0].GetComponent<aNode>().sendingSignal == true)
+            {
+                sendingSignal = true;
+            }
         }
 
         //Making sure signals don't show when there is no power
@@ -272,31 +282,6 @@ public class aNode : MonoBehaviour
     public void ShowConnections()
     {
         outputs.ForEach((GameObject g) => Debug.DrawLine(this.gameObject.transform.position, g.transform.position, Color.blue));
-    }
-
-    public void Disconnect(GameObject outObj)
-    {
-
-
-        /*//For all object's getting a signal from me
-        int tempCount = outputs.Count;
-        for (int i = 0; i < tempCount; ++i)
-        {
-            aNode outN = outputs[0].GetComponent<aNode>();
-
-            //Remove this node from it's input list
-            outN.inputs.Remove(this.gameObject);
-            print(outN.inputs.Count);
-            //If there is no more inputs from anything,this node is no longer powered
-            if (outN.inputs.Count == 0)
-                outN.isPowered = false;
-
-            //Remove the object from the outputs list
-            outputs.Remove(outputs[0]);
-
-            //Destroy(connectionRenderers[0]);
-            connectionRenderers.Remove(connectionRenderers[0]);
-        }*/
     }
 
     //Checks whether or not a connection can be established

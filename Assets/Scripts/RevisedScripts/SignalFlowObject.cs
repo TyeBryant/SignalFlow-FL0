@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using gameManagement;
 using UnityEngine;
+using System.Linq;
 
 public class SignalFlowObject : MonoBehaviour
 {
@@ -41,9 +42,9 @@ public class SignalFlowObject : MonoBehaviour
     public bool patchBayReady;
 
     //Junction box bools
-    [HideInInspector]
+    //[HideInInspector]
     public bool onJunctionBox;
-    [HideInInspector]
+    //[HideInInspector]
     public bool junctionBoxReady;
 
     //DAW bools
@@ -66,6 +67,10 @@ public class SignalFlowObject : MonoBehaviour
 
     public List<GameObject> deleteList;
 
+    public List<LineRendCol> linesWeNeed = new List<LineRendCol>();
+
+    public List<LineRendCol> conRends;
+
     // Use this for initialization
     void Start()
     {
@@ -76,6 +81,31 @@ public class SignalFlowObject : MonoBehaviour
         onJunctionBox = false;
         countCheck = false;
     }
+
+    //void recurse(GameObject current)
+    //{
+    //    conRends = FindObjectsOfType<LineRendCol>().ToList();
+
+    //        foreach (LineRendCol line in conRends)
+    //        {
+    //            if (line.outNode.GetComponent<aNode>().prevNodeSignalNumber == objectSignalNumber)
+    //            {
+    //                if (line.node.gameObject == current)
+    //                {
+    //                line.node.PlaceSignal(line.outNode);
+    //                    /*line.outNode.GetComponent<aNode>().nodeSignalNumber = line.outNode.GetComponent<aNode>().prevNodeSignalNumber;
+    //                    previousNodeList.Add(currentNode);
+    //                    previousNode = currentNode;*/
+    //                    recurse(line.outNode);
+    //                    return;
+    //                }
+    //            }
+    //        }
+           
+    //        transform.position = current.transform.position;
+
+    //        currentNode = current;
+    //}
 
     // Update is called once per frame
     void Update()
@@ -141,11 +171,43 @@ public class SignalFlowObject : MonoBehaviour
 
             GameObject currentNodeHolder = currentNode.GetComponent<aNode>().outputs[0];
             currentNode = currentNodeHolder;
+            currentNode.GetComponent<aNode>().sendingSignal = true;
         }
 
         //if (currentNode.GetComponent<aNode>().outputs[0].GetComponent<aNode>().nodeSignalNumber == this.objectSignalNumber && onDaw == false && onPatchBay == false && onJunctionBox == false && currentNode.GetComponent<aNode>().isPowered == true)
         //{
 
+        //}
+
+        //for (int i = 0; i < currentNode.GetComponent<aNode>().connectionRenderers.Count; ++i)
+        //{
+
+
+
+
+            //conRends = FindObjectsOfType<LineRendCol>().ToList();
+
+            ////aNode nodething = null;
+
+
+
+            ////if (nodething != null)
+            //{
+            //    foreach (LineRendCol line in conRends)
+            //    {
+            //        if (line.node.gameObject == currentNode)
+            //        {
+            //            if (line.outNode.GetComponent<aNode>().prevNodeSignalNumber == objectSignalNumber)
+            //            {
+            //                previousNodeList.Add(currentNode);
+            //                line.outNode.GetComponent<aNode>().nodeSignalNumber = line.outNode.GetComponent<aNode>().prevNodeSignalNumber;
+            //                transform.position = line.outNode.transform.position;
+            //                previousNode = currentNode;
+            //                currentNode = line.outNode.GetComponent<aNode>().gameObject;
+            //            }
+            //        }
+            //    }
+            //}
         //}
         
         // ---- DAW FUNCTIONALITY ---- //
@@ -282,6 +344,20 @@ public class SignalFlowObject : MonoBehaviour
         // ---- JUNCTION BOX FUNCTIONALITY ---- //
         if (onJunctionBox == true && junctionBoxReady == false)
         {
+            if(currentNode.GetComponent<aDAW>()==null)
+            {
+                int dummy = 0;
+            }
+            if (currentNode.GetComponent<aDAW>().outputs.Count > 0)
+            {
+                for (int index = 0; index < currentNode.GetComponent<aDAW>().outputs.Count; index++)
+                {
+                    if (currentNode.GetComponent<aDAW>().outputs[index].GetComponent<aNode>().nodeSignalNumber == this.objectSignalNumber)
+                    {
+                        currentNode = currentNode.GetComponent<aDAW>().outputs[index];
+                    }
+                }
+            }
             //If the cube input number is less that subDaw count, stops recurring list adding
             if (currentNode.GetComponent<aDAW>().cubeInputs.Count < currentNode.GetComponent<aDAW>().subDaws.Count)
             {
@@ -374,8 +450,11 @@ public class SignalFlowObject : MonoBehaviour
             {
                 if (onDaw)
                 {
-                    currentNode.GetComponent<aDAW>().cubeInputs.Remove(this.gameObject);
-                    previousNode.GetComponent<aDAW>().signalNumbers.Remove(this.objectSignalNumber);
+                    if (currentNode != null && previousNode != null)
+                    {
+                        currentNode.GetComponent<aDAW>().cubeInputs.Remove(this.gameObject);
+                        currentNode.GetComponent<aDAW>().signalNumbers.Remove(this.objectSignalNumber);
+                    }
                 }
 
                 if (onPatchBay)
@@ -383,7 +462,7 @@ public class SignalFlowObject : MonoBehaviour
                     if (currentNode != null && previousNode != null)
                     {
                         currentNode.GetComponent<aPatchBay>().cubeInputs.Remove(this.gameObject);
-                        previousNode.GetComponent<aPatchBay>().signalNumbers.Remove(this.objectSignalNumber);
+                        currentNode.GetComponent<aPatchBay>().signalNumbers.Remove(this.objectSignalNumber);
                     }
 
                 }
@@ -392,7 +471,7 @@ public class SignalFlowObject : MonoBehaviour
                     if (currentNode != null && previousNode != null)
                     {
                         currentNode.GetComponent<aDAW>().cubeInputs.Remove(this.gameObject);
-                        previousNode.GetComponent<aDAW>().signalNumbers.Remove(this.objectSignalNumber);
+                        currentNode.GetComponent<aDAW>().signalNumbers.Remove(this.objectSignalNumber);
                     }
                 }
 

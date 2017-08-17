@@ -39,8 +39,6 @@ public class LineRendCol : MonoBehaviour
             endPoint = conMan.mousePointer.transform.position;
             lineRend.SetPosition(1, endPoint);
         }
-
-
     }
 
     void OnMouseOver()
@@ -58,6 +56,48 @@ public class LineRendCol : MonoBehaviour
     //Manage Disconnecting
     void Disconnect()
     {
+        //GameObject[] sigPos = GameObject.FindGameObjectsWithTag("SignalPosition");
+        //for (int index = 0; index < sigPos.Length; index++)
+        //{
+        //    sigPos[index].GetComponent<SignalFlowObject>().currentNode.GetComponent<aNode>().isPowered = false;
+        //    if (sigPos[index].GetComponent<SignalFlowObject>().objectSignalNumber == node.nodeSignalNumber)
+        //    {
+        //        for (int i = 0; i < sigPos[index].GetComponent<SignalFlowObject>().previousNodeList.Count; ++i)
+        //        {
+        //            if (sigPos[index].GetComponent<SignalFlowObject>().previousNodeList[i].GetComponent<aNode>().inputs.Count <= 1 && sigPos[index].GetComponent<SignalFlowObject>().previousNodeList[i] != node)
+        //            {
+        //                sigPos[index].GetComponent<SignalFlowObject>().previousNodeList[i].GetComponent<aNode>().sendingSignal = false;
+        //                sigPos[index].GetComponent<SignalFlowObject>().previousNodeList[i].GetComponent<aNode>().prevNodeSignalNumber = sigPos[index].GetComponent<SignalFlowObject>().previousNodeList[i].GetComponent<aNode>().nodeSignalNumber;
+        //                sigPos[index].GetComponent<SignalFlowObject>().previousNodeList[i].GetComponent<aNode>().nodeSignalNumber = 0;
+        //                if (!sigPos[index].GetComponent<SignalFlowObject>().previousNodeList[i].GetComponent<aDAW>() && !sigPos[index].GetComponent<SignalFlowObject>().previousNodeList[i].GetComponent<aPatchBay>())
+        //                    sigPos[index].GetComponent<SignalFlowObject>().previousNodeList[i].GetComponent<aNode>().nodeSignalNumber = 0;
+        //                else
+        //                {
+        //                    sigPos[index].GetComponent<SignalFlowObject>().previousNodeList[i].GetComponent<aNode>().prevNodeSignalNumber = sigPos[index].GetComponent<SignalFlowObject>().objectSignalNumber;
+
+        //                    if (sigPos[index].GetComponent<SignalFlowObject>().previousNodeList[i].GetComponent<aDAW>())
+        //                            sigPos[index].GetComponent<SignalFlowObject>().previousNodeList[i].GetComponent<aDAW>().signalNumbers.Remove(sigPos[index].GetComponent<SignalFlowObject>().objectSignalNumber);
+        //                    else if (sigPos[index].GetComponent<SignalFlowObject>().previousNodeList[i].GetComponent<aPatchBay>())
+        //                            sigPos[index].GetComponent<SignalFlowObject>().previousNodeList[i].GetComponent<aPatchBay>().signalNumbers.Remove(sigPos[index].GetComponent<SignalFlowObject>().objectSignalNumber);
+        //                }
+        //            }
+        //        }
+
+        //        sigPos[index].GetComponent<SignalFlowObject>().currentNode.GetComponent<aNode>().sendingSignal = false;
+
+        //        if (sigPos[index].GetComponent<SignalFlowObject>().currentNode.GetComponent<aDAW>())
+        //            sigPos[index].GetComponent<SignalFlowObject>().currentNode.GetComponent<aDAW>().cubeInputs.Remove(sigPos[index]);
+
+        //        if (sigPos[index].GetComponent<SignalFlowObject>().currentNode.GetComponent<aPatchBay>())
+        //            sigPos[index].GetComponent<SignalFlowObject>().currentNode.GetComponent<aPatchBay>().cubeInputs.Remove(sigPos[index]);
+
+        //        sigPos[index].GetComponent<SignalFlowObject>().currentNode = node.gameObject;
+        //        sigPos[index].transform.position = node.gameObject.transform.position;
+
+        //        node.sendingSignal = true;
+        //    }
+        //}
+
         node.outputs.Remove(outNode);
         aNode s = outNode.GetComponent<aNode>();
 
