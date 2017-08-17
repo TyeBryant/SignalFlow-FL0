@@ -18,6 +18,8 @@ public class LineRendCol : MonoBehaviour
 
     aConnectionManager conMan;
 
+    public AudioClip disconnectSound;
+
     // Use this for initialization
     void Start()
     {
@@ -58,6 +60,9 @@ public class LineRendCol : MonoBehaviour
     //Manage Disconnecting
     void Disconnect()
     {
+        Debug.Log("Disconnected.");
+        AudioManager.Instance.PlayClip(disconnectSound, AudioManager.Instance.GetChannel("SFX"));
+
         node.outputs.Remove(outNode);
         aNode s = outNode.GetComponent<aNode>();
 
