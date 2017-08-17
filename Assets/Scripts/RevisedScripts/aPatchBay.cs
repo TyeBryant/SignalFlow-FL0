@@ -28,7 +28,7 @@ public class aPatchBay : aNode, IPointerClickHandler {
     float zoomSpeed = 3;
     public int pbCounter;
 
-    public int signalNumber;
+    public new int signalNumber;
 
     public List<int> signalNumbers;
 
