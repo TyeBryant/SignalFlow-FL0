@@ -60,7 +60,7 @@ public class SignalFlowStart : MonoBehaviour
 
         signalObject.GetComponent<SignalFlowObject>().currentNode = this.gameObject;
         signalObject.GetComponent<SignalFlowObject>().StartingNode = this.gameObject;
-        signalObject.GetComponent<SignalFlowObject>().signalNumber = signalNumber;
+        signalObject.GetComponent<SignalFlowObject>().objectSignalNumber = signalNumber;
 
         Nodes = Object.FindObjectsOfType<aNode>().ToList();
 
@@ -104,7 +104,7 @@ public class SignalFlowStart : MonoBehaviour
     {
         for (int index = 0; index < Nodes.Count; ++index)
         {
-            if (nodeObjects[index].GetComponent<aNode>().signalNumber == signalNumber)
+            if (nodeObjects[index].GetComponent<aNode>().nodeSignalNumber == signalNumber)
             {
                 if (!previousNodeList.Contains(nodeObjects[index]))
                 {
@@ -112,7 +112,7 @@ public class SignalFlowStart : MonoBehaviour
                     previousNodeListTypes.Add(nodeObjects[index].GetComponent<aNode>().nodeType);
                 }
             }
-            if (previousNodeList.Contains(nodeObjects[index]) && nodeObjects[index].GetComponent<aNode>().signalNumber != signalNumber)
+            if (previousNodeList.Contains(nodeObjects[index]) && nodeObjects[index].GetComponent<aNode>().nodeSignalNumber != signalNumber)
             {
                 previousNodeList.Remove(nodeObjects[index]);
                 previousNodeListTypes.Remove(nodeObjects[index].GetComponent<aNode>().nodeType);

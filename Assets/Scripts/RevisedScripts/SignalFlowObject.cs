@@ -54,7 +54,7 @@ public class SignalFlowObject : MonoBehaviour
     [HideInInspector]
     public bool countCheck;
 
-    public int signalNumber;
+    public int objectSignalNumber;
 
     public List<GameObject> deleteList;
 
@@ -79,7 +79,7 @@ public class SignalFlowObject : MonoBehaviour
         //Some win checking stuff
         if (currentNode.GetComponent<aNode>().nodeType != aNode.Type.ET_DAW || currentNode.GetComponent<aNode>().nodeType != aNode.Type.ET_PATCHBAY)
         {
-            currentNode.GetComponent<aNode>().signalNumber = signalNumber;
+            currentNode.GetComponent<aNode>().nodeSignalNumber = objectSignalNumber;
         }
 
         //Checking if the current node is a DAW node
@@ -105,7 +105,7 @@ public class SignalFlowObject : MonoBehaviour
         }
 
         // ---- For single-input/potential multi-output nodes ---- //
-        if (currentNode.GetComponent<aNode>().outputs.Count != 0 && onDaw == false && onPatchBay == false && currentNode.GetComponent<aNode>().outputs[0].GetComponent<aNode>().signalNumber == 0)
+        if (currentNode.GetComponent<aNode>().outputs.Count != 0 && onDaw == false && onPatchBay == false && currentNode.GetComponent<aNode>().outputs[0].GetComponent<aNode>().nodeSignalNumber == 0)
         {
             //Make the positions the first index of the output list
             //More outputs can instantiate a signal instead
@@ -129,9 +129,9 @@ public class SignalFlowObject : MonoBehaviour
             //If the cube input number is less that subDaw count, stops recurring list adding
             if (currentNode.GetComponent<aDAW>().cubeInputs.Count < currentNode.GetComponent<aDAW>().subDaws.Count)
             {
-                if (!currentNode.GetComponent<aDAW>().signalNumbers.Contains(this.signalNumber))
+                if (!currentNode.GetComponent<aDAW>().signalNumbers.Contains(this.objectSignalNumber))
                 {
-                    currentNode.GetComponent<aDAW>().signalNumbers.Add(this.signalNumber);
+                    currentNode.GetComponent<aDAW>().signalNumbers.Add(this.objectSignalNumber);
                 }
                 //Adding one signal cube to the list
                 currentNode.GetComponent<aDAW>().cubeInputs.Add(this.gameObject);
@@ -194,9 +194,9 @@ public class SignalFlowObject : MonoBehaviour
             //If the cube input number is less than mini patchBay count, stops recurring list adding
             if (currentNode.GetComponent<aPatchBay>().cubeInputs.Count < currentNode.GetComponent<aPatchBay>().subNodes.Count)
             {
-                if (!currentNode.GetComponent<aPatchBay>().signalNumbers.Contains(this.signalNumber))
+                if (!currentNode.GetComponent<aPatchBay>().signalNumbers.Contains(this.objectSignalNumber))
                 {
-                    currentNode.GetComponent<aPatchBay>().signalNumbers.Add(this.signalNumber);
+                    currentNode.GetComponent<aPatchBay>().signalNumbers.Add(this.objectSignalNumber);
                 }
                 //Adding one signal cube to the list
                 currentNode.GetComponent<aPatchBay>().cubeInputs.Add(this.gameObject);
@@ -286,7 +286,7 @@ public class SignalFlowObject : MonoBehaviour
                 if (onDaw)
                 {
                     currentNode.GetComponent<aDAW>().cubeInputs.Remove(this.gameObject);
-                    previousNode.GetComponent<aDAW>().signalNumbers.Remove(this.signalNumber);
+                    previousNode.GetComponent<aDAW>().signalNumbers.Remove(this.objectSignalNumber);
                 }
 
                 if (onPatchBay)
@@ -294,7 +294,7 @@ public class SignalFlowObject : MonoBehaviour
                     if (currentNode != null && previousNode != null)
                     {
                         currentNode.GetComponent<aPatchBay>().cubeInputs.Remove(this.gameObject);
-                        previousNode.GetComponent<aPatchBay>().signalNumbers.Remove(this.signalNumber);
+                        previousNode.GetComponent<aPatchBay>().signalNumbers.Remove(this.objectSignalNumber);
                     }
 
                 }
@@ -353,13 +353,13 @@ public class SignalFlowObject : MonoBehaviour
                         if (deleteList[j].GetComponent<aNode>().nodeType == aNode.Type.ET_DAW)
                         {
                             deleteList[j].GetComponent<aDAW>().cubeInputs.Remove(this.gameObject);
-                            deleteList[j].GetComponent<aDAW>().signalNumbers.Remove(this.signalNumber);
+                            deleteList[j].GetComponent<aDAW>().signalNumbers.Remove(this.objectSignalNumber);
                         }
 
                         if (deleteList[j].GetComponent<aNode>().nodeType == aNode.Type.ET_PATCHBAY)
                         {
                             deleteList[j].GetComponent<aPatchBay>().cubeInputs.Remove(this.gameObject);
-                            previousNode.GetComponent<aPatchBay>().signalNumbers.Remove(this.signalNumber);
+                            previousNode.GetComponent<aPatchBay>().signalNumbers.Remove(this.objectSignalNumber);
                         }
                         previousNodeList.Remove(deleteList[j]);
                     }
