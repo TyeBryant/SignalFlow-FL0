@@ -41,11 +41,13 @@ public class DialFaderFunctionality : MonoBehaviour
         if (dValue == 0 && fValue == 0)
         {
             thisObject.GetComponent<aNode>().enabled = false;
+            GetComponent<aNode>().sendingSignal = false;
         }
 
-        if (dValue > 0 && fValue > 0)
+        if (dValue > 0 || fValue > 0)
         {
             thisObject.GetComponent<aNode>().enabled = true;
+            GetComponent<aNode>().sendingSignal = true;
         }
 
         if (dial != null)
