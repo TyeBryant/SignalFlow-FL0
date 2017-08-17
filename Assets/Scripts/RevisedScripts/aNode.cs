@@ -111,6 +111,7 @@ public class aNode : MonoBehaviour
 
     // Node Sounds AudioClip.
     public AudioClip selectedAudioClip;
+    public AudioClip connectionSound;
 
     // Use this for initialization
     public void Start()
@@ -263,6 +264,9 @@ public class aNode : MonoBehaviour
                     //If check returns true, then run place signal on the connection amanger
                     Debug.Log("Still doing things");
                     if (Check()) {
+                        Debug.Log("Connection Made.");
+                        AudioManager.Instance.PlayClip(connectionSound, AudioManager.Instance.GetChannel("SFX"));
+
                         connectionManager.inputFrom.GetComponent<aNode>().PlaceSignal(this.gameObject);
                         Debug.Log("More things being done");
                     }
