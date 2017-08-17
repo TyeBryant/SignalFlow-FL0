@@ -299,11 +299,14 @@ public class SignalFlowObject : MonoBehaviour
 
                 }
                 int index = previousNodeList.Count - 1;
-                int removeIndex = previousNodeList.Count;
-                currentNode = previousNodeList[index];
-                this.transform.position = currentNode.transform.position;
+                if (index >= 0)
+                {
+                    int removeIndex = previousNodeList.Count;
+                    currentNode = previousNodeList[index];
+                    this.transform.position = currentNode.transform.position;
 
-                previousNodeList.RemoveAt(index);
+                    previousNodeList.RemoveAt(index);
+                }
             }
 
             //    if (previousNode.GetComponent<aNode>().isPowered == false)
