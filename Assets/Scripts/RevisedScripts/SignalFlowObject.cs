@@ -28,16 +28,16 @@ public class SignalFlowObject : MonoBehaviour
     public GameObject StartingNode;
 
     //Bools to check if they are on multi-input/output nodes
-    [HideInInspector]
+    //[HideInInspector]
     public bool onDaw;
 
-    [HideInInspector]
+    //[HideInInspector]
     public bool dawReady;
 
     //Patch bay bools
-    [HideInInspector]
+    //[HideInInspector]
     public bool onPatchBay;
-    [HideInInspector]
+    //[HideInInspector]
     public bool patchBayReady;
 
     //Junction box bools
@@ -205,7 +205,7 @@ public class SignalFlowObject : MonoBehaviour
                         previousNode.GetComponent<aDAW>().cubeInputs.Remove(this.gameObject);
                     }
                 }
-                if (currentNode.GetComponent<aDAW>().selectedIndex != dawInt)
+                else
                 {
                     countCheck = false;
                     genericInt = 0;
@@ -237,41 +237,40 @@ public class SignalFlowObject : MonoBehaviour
 
         if (patchBayReady == true)
         {
-            //If the selected index is the one you choose
-            if (currentNode.GetComponent<aPatchBay>().selectedIndex == patchBayInt)
-            {
-                if (countCheck == false)
-                {
-                    genericInt = currentNode.GetComponent<aPatchBay>().outputs.Count;
-                    countCheck = true;
-                }
-
-                if (genericInt < currentNode.GetComponent<aPatchBay>().outputs.Count && countCheck == true)
-                {
-                    int i = currentNode.GetComponent<aPatchBay>().outputs.Count - 1;
-                    this.transform.position = currentNode.GetComponent<aPatchBay>().outputs[i].transform.position;
-
-                    previousNode = currentNode;
-                    previousNodeList.Add(previousNode);
-
-                    //Adding things to the game manager - win state shit
-                    aNode.Type type = previousNode.GetComponent<aNode>().nodeType;
-
-                    GameObject currentNodeHolder = currentNode.GetComponent<aPatchBay>().outputs[i];
-                    currentNode = currentNodeHolder;
-
-                    onPatchBay = false;
-                    patchBayReady = false;
-                    patchBayInt = 0;
-                    genericInt = 0;
-
-                    previousNode.GetComponent<aPatchBay>().cubeInputs.Remove(this.gameObject);
-                }
-            }
-
             if (currentNode.GetComponent<aPatchBay>())
             {
-                if (currentNode.GetComponent<aPatchBay>().selectedIndex != patchBayInt)
+                //If the selected index is the one you choose
+                if (currentNode.GetComponent<aPatchBay>().selectedIndex == patchBayInt)
+                {
+                    if (countCheck == false)
+                    {
+                        genericInt = currentNode.GetComponent<aPatchBay>().outputs.Count;
+                        countCheck = true;
+                    }
+
+                    if (genericInt < currentNode.GetComponent<aPatchBay>().outputs.Count && countCheck == true)
+                    {
+                        int i = currentNode.GetComponent<aPatchBay>().outputs.Count - 1;
+                        this.transform.position = currentNode.GetComponent<aPatchBay>().outputs[i].transform.position;
+
+                        previousNode = currentNode;
+                        previousNodeList.Add(previousNode);
+
+                        //Adding things to the game manager - win state shit
+                        aNode.Type type = previousNode.GetComponent<aNode>().nodeType;
+
+                        GameObject currentNodeHolder = currentNode.GetComponent<aPatchBay>().outputs[i];
+                        currentNode = currentNodeHolder;
+
+                        onPatchBay = false;
+                        patchBayReady = false;
+                        patchBayInt = 0;
+                        genericInt = 0;
+
+                        previousNode.GetComponent<aPatchBay>().cubeInputs.Remove(this.gameObject);
+                    }
+                }
+                else
                 {
                     countCheck = false;
                     genericInt = 0;
@@ -337,7 +336,7 @@ public class SignalFlowObject : MonoBehaviour
                         previousNode.GetComponent<aDAW>().cubeInputs.Remove(this.gameObject);
                     }
                 }
-                if (currentNode.GetComponent<aDAW>().selectedIndex != junctionBoxInt)
+                else
                 {
                     countCheck = false;
                     genericInt = 0;
