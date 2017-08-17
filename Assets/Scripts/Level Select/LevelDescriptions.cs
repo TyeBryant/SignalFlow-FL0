@@ -9,8 +9,10 @@ public class LevelDescriptions : MonoBehaviour {
 
     public List<GameObject> levelbbios = new List<GameObject>();
 
-	// Use this for initialization
-	void Start () {
+    public AudioClip levelSelectSound;
+
+    // Use this for initialization
+    void Start () {
         
 	}
 	
@@ -26,6 +28,9 @@ public class LevelDescriptions : MonoBehaviour {
 
             levelbio.SetActive(false);
         }
+
+        AudioManager.Instance.PlayClip(levelSelectSound, AudioManager.Instance.GetChannel("SFX"));
+
         LevelDescription.SetActive(true);
     }
 }
