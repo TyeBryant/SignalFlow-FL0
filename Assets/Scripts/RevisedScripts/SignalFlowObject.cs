@@ -40,11 +40,19 @@ public class SignalFlowObject : MonoBehaviour
     [HideInInspector]
     public bool patchBayReady;
 
+    //Junction box bools
+    [HideInInspector]
+    public bool onJunctionBox;
+    [HideInInspector]
+    public bool junctionBoxReady;
+
     //DAW bools
     [HideInInspector]
     public int dawInt;
     [HideInInspector]
     public int patchBayInt;
+    [HideInInspector]
+    public int junctionBoxInt;
 
     [HideInInspector]
     public int outputCount;
@@ -65,6 +73,7 @@ public class SignalFlowObject : MonoBehaviour
 
         onDaw = false;
         onPatchBay = false;
+        onJunctionBox = false;
         countCheck = false;
     }
 
@@ -77,7 +86,7 @@ public class SignalFlowObject : MonoBehaviour
         }
 
         //Some win checking stuff
-        if (currentNode.GetComponent<aNode>().nodeType != aNode.Type.ET_DAW || currentNode.GetComponent<aNode>().nodeType != aNode.Type.ET_PATCHBAY)
+        if (currentNode.GetComponent<aNode>().nodeType != aNode.Type.ET_DAW || currentNode.GetComponent<aNode>().nodeType != aNode.Type.ET_PATCHBAY || currentNode.GetComponent<aNode>().nodeType != aNode.Type.ET_JUNCTIONBOX)
         {
             currentNode.GetComponent<aNode>().nodeSignalNumber = objectSignalNumber;
         }
@@ -104,8 +113,19 @@ public class SignalFlowObject : MonoBehaviour
             patchBayReady = false;
         }
 
+        //Checking if the current node is a JunctionBox node
+        if (currentNode.GetComponent<aNode>().nodeType == aNode.Type.ET_JUNCTIONBOX)
+        {
+            onJunctionBox = true;
+        }
+        else if (currentNode.GetComponent<aNode>().nodeType != aNode.Type.ET_JUNCTIONBOX)
+        {
+            onJunctionBox = false;
+            junctionBoxReady = false;
+        }
+
         // ---- For single-input/potential multi-output nodes ---- //
-        if (currentNode.GetComponent<aNode>().outputs.Count != 0 && onDaw == false && onPatchBay == false && currentNode.GetComponent<aNode>().outputs[0].GetComponent<aNode>().nodeSignalNumber == 0)
+        if (currentNode.GetComponent<aNode>().outputs.Count != 0 && onDaw == false && onPatchBay == false && onJunctionBox == false && currentNode.GetComponent<aNode>().outputs[0].GetComponent<aNode>().nodeSignalNumber == 0)
         {
             //Make the positions the first index of the output list
             //More outputs can instantiate a signal instead
@@ -255,6 +275,71 @@ public class SignalFlowObject : MonoBehaviour
 
         }
 
+        // ---- JUNCTION BOX FUNCTIONALITY ---- //
+        if (onJunctionBox == true && junctionBoxReady == false)
+        {
+            //If the cube input number is less that subDaw count, stops recurring list adding
+            if (currentNode.GetComponent<aDAW>().cubeInputs.Count < currentNode.GetComponent<aDAW>().subDaws.Count)
+            {
+                if (!currentNode.GetComponent<aDAW>().signalNumbers.Contains(this.objectSignalNumber))
+                {
+                    currentNode.GetComponent<aDAW>().signalNumbers.Add(this.objectSignalNumber);
+                }
+                //Adding one signal cube to the list
+                currentNode.GetComponent<aDAW>().cubeInputs.Add(this.gameObject);
+
+                //Signal object moves to the specific miniDAW position
+                int i = currentNode.GetComponent<aDAW>().cubeInputs.Count - 1;
+                junctionBoxInt = i;
+                this.transform.position = currentNode.GetComponent<aDAW>().subDaws[i].transform.position;
+
+                junctionBoxReady = true;
+            }
+        }
+        if (junctionBoxReady == true)
+        {
+            if (currentNode.GetComponent<aDAW>())
+            {
+                //If the selected index is the one that you choose
+                if (currentNode.GetComponent<aDAW>().selectedIndex == junctionBoxInt)
+                {
+                    if (countCheck == false)
+                    {
+                        genericInt = currentNode.GetComponent<aDAW>().outputs.Count;
+                        countCheck = true;
+                    }
+
+                    if (genericInt < currentNode.GetComponent<aDAW>().outputs.Count && countCheck == true)
+                    {
+                        int i = currentNode.GetComponent<aDAW>().outputs.Count - 1;
+                        this.transform.position = currentNode.GetComponent<aDAW>().outputs[i].transform.position;
+
+                        previousNode = currentNode;
+                        previousNodeList.Add(previousNode);
+
+                        //Adding things to the game manager - win state shit
+                        aNode.Type type = previousNode.GetComponent<aNode>().nodeType;
+
+                        GameObject currentNodeHolder = currentNode.GetComponent<aDAW>().outputs[i];
+                        currentNode = currentNodeHolder;
+
+                        onJunctionBox = false;
+                        junctionBoxReady = false;
+                        countCheck = false;
+                        junctionBoxInt = 0;
+                        genericInt = 0;
+
+                        previousNode.GetComponent<aDAW>().cubeInputs.Remove(this.gameObject);
+                    }
+                }
+                if (currentNode.GetComponent<aDAW>().selectedIndex != junctionBoxInt)
+                {
+                    countCheck = false;
+                    genericInt = 0;
+                }
+            }
+        }
+
         //If list is empty and current node doesn't equal mic (start), kill yourself
         if (previousNodeList.Count == 0 && currentNode.GetComponent<aNode>().nodeType != aNode.Type.ET_MICROPHONE)
         {
@@ -298,6 +383,15 @@ public class SignalFlowObject : MonoBehaviour
                     }
 
                 }
+                if (onJunctionBox)
+                {
+                    if (currentNode != null && previousNode != null)
+                    {
+                        currentNode.GetComponent<aDAW>().cubeInputs.Remove(this.gameObject);
+                        previousNode.GetComponent<aDAW>().signalNumbers.Remove(this.objectSignalNumber);
+                    }
+                }
+
                 int index = previousNodeList.Count - 1;
                 int removeIndex = previousNodeList.Count;
                 currentNode = previousNodeList[index];
@@ -360,6 +454,12 @@ public class SignalFlowObject : MonoBehaviour
                         {
                             deleteList[j].GetComponent<aPatchBay>().cubeInputs.Remove(this.gameObject);
                             previousNode.GetComponent<aPatchBay>().signalNumbers.Remove(this.objectSignalNumber);
+                        }
+
+                        if (deleteList[j].GetComponent<aNode>().nodeType == aNode.Type.ET_PATCHBAY)
+                        {
+                            deleteList[j].GetComponent<aDAW>().cubeInputs.Remove(this.gameObject);
+                            deleteList[j].GetComponent<aDAW>().signalNumbers.Remove(this.objectSignalNumber);
                         }
                         previousNodeList.Remove(deleteList[j]);
                     }
