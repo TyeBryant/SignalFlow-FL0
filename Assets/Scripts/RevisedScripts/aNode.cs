@@ -143,6 +143,19 @@ public class aNode : MonoBehaviour
     // Update is called once per frame
     public void Update()
     {
+        //Bug fixing things
+        if (sendingSignal == true && signalObject == null)
+        {
+            GameObject[] sigPos = GameObject.FindGameObjectsWithTag("SignalPosition");
+            for (int index = 0; index < sigPos.Length; index++)
+            {
+                if (sigPos[index].GetComponent<SignalFlowObject>().objectSignalNumber == this.nodeSignalNumber)
+                {
+                    signalObject = sigPos[index].GetComponent<SignalFlowObject>().signalFlowObjectType;
+                }
+            }
+        }
+
         //Win checking stuff
         if (isPowered == false)
         {
